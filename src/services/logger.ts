@@ -17,7 +17,7 @@ const myFormat = printf((info) => {
 const logConfiguration: LoggerOptions = {
   level: 'silly',
   transports: [
-    new transports.Console({ level: 'info' }),
+    new transports.Console({ level: 'silly' }),
     new transports.File({
       filename: './logs/error-logging.log',
       level: 'error',

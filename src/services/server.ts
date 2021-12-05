@@ -9,10 +9,7 @@ import compression from 'compression';
 import { Logger } from './logger';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { MongoDB, mongoURL } from './mongodb';
-
-// TODO: Pasar a otro lado???
-new MongoDB();
+import { mongoURL } from './mongodb';
 
 const app = express();
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
@@ -61,7 +58,7 @@ const unMinuto = 1000 * 60;
 const StoreOptions = {
   store: MongoStore.create({
     mongoUrl: mongoURL,
-    dbName: 'persistencia',
+    dbName: 'kwikemartonline-users',
     stringify: false,
     autoRemove: 'interval',
     autoRemoveInterval: 1
