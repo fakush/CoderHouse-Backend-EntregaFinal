@@ -22,4 +22,8 @@ export class MongoDB {
     if (!this.connection) this.connection = mongoose.createConnection(this.uri);
     return this.connection;
   }
+
+  closeConnection() {
+    mongoose.disconnect();
+  }
 }

@@ -141,8 +141,8 @@ const router = Router();
  */
 router.post('/login', (req, res, next) => {
   passport.authenticate('login', function (err, user, info) {
-    if (err) return next(err);
-    if (user.error) return res.status(401).json({ msg: 'Fallo el proceso de signup: ' + user.error });
+    Logger.debug(user);
+    if (!user) return res.status(401).json({ msg: 'Fallo el proceso de login.' });
     user.password = '***PASSWORD***';
     res.json({ msg: 'Welcome!', user: user });
   })(req, res, next);

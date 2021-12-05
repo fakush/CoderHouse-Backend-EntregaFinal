@@ -36,6 +36,8 @@ UserSchema.pre('save', async function (next) {
 //   return compare;
 // };
 
+// Exporto el modelo para tests
+export const Users = mongoose.model<UserObject>(dbCollection, UserSchema);
 export class PersistenciaMongo implements UserBaseClass {
   private server: string;
   private users;
