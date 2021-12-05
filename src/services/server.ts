@@ -9,13 +9,15 @@ import compression from 'compression';
 import { Logger } from './logger';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { mongoURL } from './mongodb';
+import { MongoDB, mongoURL } from './mongodb';
+
+// TODO: Pasar a otro lado???
+new MongoDB();
 
 const app = express();
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
 // paths
-Logger.info(process.cwd() + '/public');
 const publicFolderPath = process.cwd() + '/public';
 const uploadsFolderPath = process.cwd() + '/assets/images';
 const layoutDirPath = process.cwd() + '/views/layouts';

@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import { Logger } from '../services/logger';
 
-Logger.info('Inicializando en entorno: ' + process.env.NODE_ENV);
 dotenv.config();
+Logger.info('Inicializando en entorno: ' + process.env.NODE_ENV);
 
 const venv = {
   NODE_ENV: process.env.NODE_ENV || 'development',
