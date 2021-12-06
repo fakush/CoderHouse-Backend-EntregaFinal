@@ -21,7 +21,7 @@ describe('Tests de los endpoints de usuarios.', () => {
   });
 
   afterAll((done) => {
-    // await mongoose.disconnect();
+    mongoose.disconnect();
     done();
   });
 
