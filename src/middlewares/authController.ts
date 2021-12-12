@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { authAPI } from '../apis/authApi';
+import { authAPI } from '../apis/authAPI';
 import { userJoiSchema, UserObject } from '../models/users/users.interface';
 import { generateAuthToken, checkAuth } from './auth';
 import { Logger } from '../utils/logger';

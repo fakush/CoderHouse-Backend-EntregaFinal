@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy, VerifyFunctionWithRequest, IStrategyOptionsWithRequest } from 'passport-local';
 import { Request, Response, NextFunction } from 'express';
-import { authAPI } from '../apis/authApi';
+import { authAPI } from '../apis/authAPI';
 import { userJoiSchema } from '../models/users/users.interface';
 import { Logger } from '../utils/logger';
 
