@@ -6,7 +6,7 @@ import session from 'express-session';
 import * as http from 'http';
 import routersIndex from '../routes/index';
 import compression from 'compression';
-import { Logger } from './logger';
+import { Logger } from '../utils/logger';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { mongoURL } from './mongodb';

@@ -3,7 +3,7 @@ import { Strategy, VerifyFunctionWithRequest, IStrategyOptionsWithRequest } from
 import { Request, Response, NextFunction } from 'express';
 import { authAPI } from '../apis/authApi';
 import { userJoiSchema } from '../models/users/users.interface';
-import { Logger } from '../services/logger';
+import { Logger } from '../utils/logger';
 
 const strategyOptions: IStrategyOptionsWithRequest = {
   usernameField: 'username',

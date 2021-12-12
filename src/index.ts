@@ -1,7 +1,7 @@
 import myServer from './services/server';
 import Config from './config';
 import { portArgument } from './config/arguments';
-import { Logger } from './services/logger';
+import { Logger } from './utils/logger';
 import initWsServer from './services/sockets';
 import { Console } from 'console';
 

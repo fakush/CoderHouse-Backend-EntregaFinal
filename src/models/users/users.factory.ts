@@ -1,5 +1,5 @@
 import { PersistenciaMongo } from './DAOs/mongoDAO';
-import { Logger } from '../../services/logger';
+import { Logger } from '../../utils/logger';
 
 export enum Persistencia {
   Mongo = 'MONGO'

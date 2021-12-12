@@ -1,5 +1,5 @@
 import minimist from 'minimist';
-import { Logger } from '../services/logger';
+import { Logger } from '../utils/logger';
 
 const args = minimist(process.argv.slice(2));
 

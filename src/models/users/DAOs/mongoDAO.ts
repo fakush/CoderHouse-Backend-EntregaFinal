@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import { newUserObject, UserObject, UserBaseClass } from '../users.interface';
-import { Logger } from '../../../services/logger';
+import { Logger } from '../../../utils/logger';
 import { MongoDB } from '../../../services/mongodb';
 import moment from 'moment';
 
@@ -49,6 +49,10 @@ export class PersistenciaMongo implements UserBaseClass {
     this.users = server.model<UserObject>(dbCollection, UserSchema);
   }
 
+  model(): any {
+    return this.users;
+  }
+
   async query(query: any): Promise<UserObject> {
     // Logger.debug('PersistenciaMongo.query()');
     const result = await this.users.find(query);
@@ -86,10 +90,9 @@ export class PersistenciaMongo implements UserBaseClass {
     return newUser;
   }
 
-  async validateUserPassword(username: string, password: string): Promise<boolean> {
-    const user = await this.users.findOne({ username });
-    if (!user) return false;
-    const compare = await bcrypt.compare(password, user.password);
+  async validateUserPassword(dbPassword: string, password: string): Promise<boolean> {
+    // Logger.debug('PersistenciaMongo.validateUserPassword()');
+    const compare = await bcrypt.compare(password, dbPassword);
     if (!compare) return false;
     return true;
   }

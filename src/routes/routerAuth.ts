@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import passport from '../middlewares/userAuth';
-import { Logger } from '../services/logger';
+import { Logger } from '../utils/logger';
 
 /**
  * @swagger

@@ -1,6 +1,6 @@
 import { newUserObject, UserObject, UserQuery } from '../models/users/users.interface';
 import { UsersFactory, Persistencia } from '../models/users/users.factory';
-import { Logger } from '../services/logger';
+import { Logger } from '../utils/logger';
 // import { cartAPI } from './cartAPI';
 
 const tipo = Persistencia.Mongo;
@@ -10,6 +10,10 @@ class authAPIClass {
 
   constructor() {
     this.auth = UsersFactory.get(tipo);
+  }
+
+  userModel() {
+    return this.auth.model();
   }
 
   async query(username?: string, email?: string): Promise<UserObject> {
@@ -33,8 +37,8 @@ class authAPIClass {
     return newUser;
   }
 
-  async ValidatePassword(username: string, password: string) {
-    return this.auth.validateUserPassword(username, password);
+  async ValidatePassword(dbPassword: string, password: string) {
+    return this.auth.validateUserPassword(dbPassword, password);
   }
 }
 

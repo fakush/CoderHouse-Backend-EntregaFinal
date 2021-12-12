@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Logger } from './services/logger';
+import { Logger } from './utils/logger';
 
 fs.renameSync('../.env.example', './.env');
 Logger.info('.env file created');

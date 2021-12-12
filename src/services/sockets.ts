@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import moment from 'moment';
-import { Logger } from './logger';
+import { Logger } from '../utils/logger';
 // import { productsAPI } from '../apis/productsAPI';
 // import { chatAPI } from '../apis/chatAPI';
 // import faker from 'faker';

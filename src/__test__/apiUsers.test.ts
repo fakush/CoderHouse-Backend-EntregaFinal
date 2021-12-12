@@ -3,10 +3,10 @@ import mongoose from 'mongoose';
 import { MongoDB } from '../services/mongoDB';
 import { UserObject } from '../models/users/users.interface';
 import { PersistenciaMongo } from '../models/users/DAOs/mongoDAO';
-import { Users } from '../models/users/DAOs/mongoDAO';
+import { authAPI } from '../apis/authAPI';
 import ExpressServer from '../services/server';
 import { expect } from 'chai';
-import { Logger } from '../services/logger';
+import { Logger } from '../utils/logger';
 
 describe('Tests de los endpoints de usuarios.', () => {
   let newMongo: any;
@@ -17,7 +17,7 @@ describe('Tests de los endpoints de usuarios.', () => {
     jest.spyOn(mongoose, 'createConnection').mockImplementationOnce(() => 'Connected');
     newMongo = new MongoDB();
     request = supertest(ExpressServer);
-    persistencia = Users;
+    persistencia = authAPI.userModel;
   });
 
   afterAll((done) => {
