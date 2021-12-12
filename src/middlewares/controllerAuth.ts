@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { authAPI } from '../apis/authApi';
-import { userJoiSchema } from '../models/users/users.interface';
-import { generateAuthToken } from './auth';
+import { userJoiSchema, UserObject } from '../models/users/users.interface';
+import { generateAuthToken, checkAuth } from './auth';
 import { Logger } from '../utils/logger';
 
+//todo: is this needed?
+interface RequestUser extends Request {
+  user?: UserObject;
+}
 class authMiddleware {
   async checkValidUserAndPassword(req: Request, res: Response, next: NextFunction) {
     if (!req.body) {
@@ -55,6 +59,23 @@ class authMiddleware {
       msg: 'signup OK',
       token
     });
+  }
+
+  async checkUserAuth(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers['x-auth-token'];
+    if (!token) {
+      Logger.debug('No token provided.');
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+    const user = await checkAuth(token);
+    if (!user) {
+      Logger.debug('Invalid token.');
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+    req.user = user;
+    Logger.debug('User: ' + user.username + ' authorized.');
+    // Logger.debug('Req.user: ' + req.user);
+    next();
   }
 }
 

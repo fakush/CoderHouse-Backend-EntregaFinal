@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
-
-const admin = true;
+import { UserObject } from '../models/users/users.interface';
+import { Logger } from '../utils/logger';
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  //todo: check if user is admin
-
+  const user: UserObject = req.user as UserObject;
+  Logger.debug(`isAdmin: ${user.isAdmin}`);
+  const admin = user.isAdmin || false;
   if (admin) next();
   else {
     res.status(401).json({
-      msg: 'No estas autorizado'
+      msg: 'User has no admin rights'
     });
   }
 };
