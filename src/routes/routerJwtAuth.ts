@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { controllerAuth } from '../middlewares/authController';
+import { controllerAuth } from '../controllers/authController';
 import { isAdmin } from '../middlewares/isAdmin';
 import asyncHandler from 'express-async-handler';
 

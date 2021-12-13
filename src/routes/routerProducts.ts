@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { productsController } from '../middlewares/productsController';
-import { controllerAuth } from '../middlewares/authController';
+import { productsController } from '../controllers/productsController';
+import { controllerAuth } from '../controllers/authController';
 import { isAdmin } from '../middlewares/isAdmin';
 import asyncHandler from 'express-async-handler';
 

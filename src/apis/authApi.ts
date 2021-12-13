@@ -1,7 +1,7 @@
 import { newUserObject, UserObject, UserQuery } from '../models/users/users.interface';
 import { UsersFactory, Persistencia } from '../models/users/users.factory';
 import { Logger } from '../utils/logger';
-// import { cartAPI } from './cartAPI';
+import { cartAPI } from './cartsAPI';
 
 const tipo = Persistencia.Mongo;
 
@@ -33,7 +33,7 @@ class authAPIClass {
 
   async signUpUser(data: newUserObject): Promise<UserObject> {
     const newUser = await this.auth.signUp(data);
-    // await cartAPI.createCart(newUser._id);
+    await cartAPI.createCart(newUser._id);
     return newUser;
   }
 
