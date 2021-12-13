@@ -38,7 +38,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/carrito/:id:
+ * /api/cart/:id:
  *   get:
  *     summary: Devuelve un carrito
  *     parameters:
@@ -84,7 +84,7 @@ router.get('/:id', cartController.lookForId, asyncHandler(cartController.getCart
 
 /**
  * @swagger
- * /api/carrito/:id:
+ * /api/cart/:id:
  *   post:
  *     summary: Ingresa un producto al carrito
  *     parameters:
@@ -148,7 +148,7 @@ router.post('/:id', cartController.lookForId, asyncHandler(cartController.add2Ca
 
 /**
  * @swagger
- * /api/carrito/:id:
+ * /api/cart/:id:
  *   delete:
  *     summary: Elimina un producto del carrito o actualiza la cantidad de productos
  *     parameters:
