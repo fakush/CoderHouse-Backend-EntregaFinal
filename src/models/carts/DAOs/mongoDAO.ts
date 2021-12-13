@@ -11,10 +11,9 @@ const cartSchema = new mongoose.Schema<CartObject>({
 
 const dbCollection = 'carts';
 export class PersistenciaMongo implements CartBaseClass {
-  private server: string;
   private carrito;
 
-  constructor(local: boolean = false) {
+  constructor() {
     const mongo = new MongoDB();
     const server = mongo.getConnection();
     this.carrito = server.model<CartObject>(dbCollection, cartSchema);

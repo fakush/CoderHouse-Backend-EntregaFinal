@@ -10,7 +10,7 @@ export class CartFactory {
     switch (tipo) {
       case Persistencia.Mongo:
         Logger.info('Carrito está escribiendo en MongoDB');
-        return new PersistenciaMongo(true);
+        return new PersistenciaMongo();
       default:
         Logger.info('Carrito está escribiendo en MongoDB por default');
         return new PersistenciaMongo();
