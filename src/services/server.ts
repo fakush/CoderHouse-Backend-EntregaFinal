@@ -1,6 +1,7 @@
 import express, { Request, Response, ErrorRequestHandler } from 'express';
 import Config from '../config';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
 import * as http from 'http';
@@ -32,6 +33,10 @@ app.use(errorHandler);
 
 // Setea el uso de compresion.
 app.use(compression());
+
+//? Seteo bodyParser?
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 // Setea el uso de helmet.
 // app.use(helmet());

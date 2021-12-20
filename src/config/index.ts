@@ -36,7 +36,11 @@ const venv = {
 
   GMAIL_USERNAME: process.env.GMAIL_USERNAME || 'user',
   GMAIL_EMAIL: process.env.GMAIL_EMAIL || 'email',
-  GMAIL_PASSWORD: process.env.GMAIL_PASSWORD || 'pwd'
+  GMAIL_PASSWORD: process.env.GMAIL_PASSWORD || 'pwd',
+
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || 'cloudName',
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || 'apiKey',
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || 'apiSecret',
 };
 
 export default venv;
