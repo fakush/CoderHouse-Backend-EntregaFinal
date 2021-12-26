@@ -10,9 +10,12 @@ interface RequestUser extends Request {
 }
 class authMiddleware {
   async checkValidUserAndPassword(req: Request, res: Response, next: NextFunction) {
-    if (!req.body) {
-      return res.status(400).json({ msg: 'No data received' });
+    if (!req.body || req.body.username === undefined || req.body.password === undefined) {
+      Logger.warn('Login attempt with no data.');
+      return res.status(400).json({ msg: 'Incomplete or No data received' });
     }
+    // Logger.debug('Checking user and password');
+    // Logger.debug('req.body: ' + JSON.stringify(req.body));
     let { username, email, password } = req.body;
     const user = await authAPI.query(username, email);
     // Logger.debug('User: ' + user.username + ' exists.');
@@ -29,8 +32,8 @@ class authMiddleware {
   }
 
   async checkExistingUser(req: Request, res: Response, next: NextFunction) {
-    if (!req.body) {
-      return res.status(400).json({ msg: 'No data received' });
+    if (!req.body || req.body.username === undefined || req.body.password === undefined) {
+      return res.status(400).json({ msg: 'Incomplete or No data received' });
     }
     let { username, email } = req.body;
     const user = await authAPI.query(username, email);
@@ -74,7 +77,6 @@ class authMiddleware {
     }
     req.user = user;
     Logger.debug('User: ' + user.username + ' authorized.');
-    // Logger.debug('Req.user: ' + req.user);
     next();
   }
 }

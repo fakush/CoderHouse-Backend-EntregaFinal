@@ -2,6 +2,120 @@ import { Router } from 'express';
 import { cartController } from '../controllers/cartsController';
 import asyncHandler from 'express-async-handler';
 
+const router = Router();
+
+/**
+ * @swagger
+ * /api/cart/:id:
+ *   get:
+ *     summary: Devuelve un carrito
+ *     tags:
+ *       - Cart
+ *     parameters:
+ *       - in: path
+ *         id: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del usuario al que pertenece el carrito
+ *     responses:
+ *       200:
+ *         description: get cart by userId
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items :
+ *                  $ref: '#/components/schemas/CartData'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *                  $ref: '#/components/schemas/400BadRequest' 
+ */
+router.get('/:id', cartController.lookForId, asyncHandler(cartController.getCart as any));
+
+/**
+ * @swagger
+ * /api/cart/:id:
+ *   post:
+ *     summary: Ingresa un producto al carrito
+ *     tags:
+ *       - Cart
+ *     parameters:
+ *       - in: path
+ *         id: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del usuario al que pertenece el carrito
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewCartInput'
+ *     responses:
+ *       200:
+ *         description: Devuelve el carrito con el producto ingresado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items :
+ *                  msg: 'creando productos'
+ *                  $ref: '#/components/schemas/CartData'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/400BadRequest'
+ */
+router.post('/:id', cartController.lookForId, asyncHandler(cartController.add2Cart as any));
+
+/**
+ * @swagger
+ * /api/cart/:id:
+ *   delete:
+ *     summary: Elimina un producto del carrito o actualiza la cantidad de productos
+ *     tags:
+ *       - Cart
+ *     parameters:
+ *       - in: path
+ *         id: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del usuario al que pertenece el carrito
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewCartInput'
+ *     responses:
+ *       200:
+ *         description: Devuelve el carrito con el producto ingresado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items :
+ *                  msg: 'creando productos'
+ *                  $ref: '#/components/schemas/CartData'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/400BadRequest'
+ */
+router.delete('/:id', cartController.lookForId, asyncHandler(cartController.deleteProducts as any));
+
+export default router;
+
 /**
  * @swagger
  * components:
@@ -33,181 +147,3 @@ import asyncHandler from 'express-async-handler';
  *           description: Cantidad de productos
  *           example: 1
  */
-
-const router = Router();
-
-/**
- * @swagger
- * /api/cart/:id:
- *   get:
- *     summary: Devuelve un carrito
- *     parameters:
- *       - in: path
- *         id: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del usuario al que pertenece el carrito
- *     responses:
- *       200:
- *         description: get cart by userId
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items :
- *                  $ref: '#/components/schemas/CartData'
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "missing parameters"
- *       401:
- *         description: Carrito no encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "cart not found"
- */
-router.get('/:id', cartController.lookForId, asyncHandler(cartController.getCart as any));
-
-/**
- * @swagger
- * /api/cart/:id:
- *   post:
- *     summary: Ingresa un producto al carrito
- *     parameters:
- *       - in: path
- *         id: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del usuario al que pertenece el carrito
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/NewCartInput'
- *     responses:
- *       200:
- *         description: Devuelve el carrito con el producto ingresado
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items :
- *                  msg: 'creando productos'
- *                  $ref: '#/components/schemas/CartData'
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "missing parameters"
- *       401:
- *         description: Carrito no encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "cart not found"
- *       402:
- *         description: El tipo de dato para alguno de los campos es incorrecto
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "El tipo de dato para alguno de los campos es incorrecto"
- */
-router.post('/:id', cartController.lookForId, asyncHandler(cartController.add2Cart as any));
-
-/**
- * @swagger
- * /api/cart/:id:
- *   delete:
- *     summary: Elimina un producto del carrito o actualiza la cantidad de productos
- *     parameters:
- *       - in: path
- *         id: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del usuario al que pertenece el carrito
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/NewCartInput'
- *     responses:
- *       200:
- *         description: Devuelve el carrito con el producto ingresado
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items :
- *                  msg: 'creando productos'
- *                  $ref: '#/components/schemas/CartData'
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "missing parameters"
- *       401:
- *         description: Carrito no encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "cart not found"
- *       402:
- *         description: El tipo de dato para alguno de los campos es incorrecto
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de error
- *                   example: "El tipo de dato para alguno de los campos es incorrecto"
- */
-router.delete('/:id', cartController.lookForId, asyncHandler(cartController.deleteProducts as any));
-
-export default router;
