@@ -31,15 +31,18 @@ class OrderAPIClass {
     const cart = await cartAPI.getCart(userId);
     Logger.debug(`Creating order for cart ${cart._id}`);
     if (!cart) throw new Error('Cart does not exist. Error creating order');
-    const getPrice = async (product: any) => await productsAPI.getProducts(product._id).then(product => product[0].price);
-    const products = await Promise.all(cart.products.map(async product => {
-      const price = await getPrice(product);
-      return {
-        _id: product._id,
-        amount: product.amount,
-        price
-      };
-    }));
+    const getPrice = async (product: any) =>
+      await productsAPI.getProducts(product._id).then((product) => product[0].price);
+    const products = await Promise.all(
+      cart.products.map(async (product) => {
+        const price = await getPrice(product);
+        return {
+          _id: product._id,
+          amount: product.amount,
+          price
+        };
+      })
+    );
     Logger.debug(`Products: ${JSON.stringify(products)}`);
     const orderTotal = products.reduce((total, product) => total + product.price * product.amount, 0);
     const order = {
@@ -48,8 +51,14 @@ class OrderAPIClass {
       status: 'Generated',
       timestamp: Date.now().toString(),
       orderTotal: orderTotal
-    }
-    const newOrder = await this.order.createOrder(userId, order.products, order.status, order.timestamp, order.orderTotal);
+    };
+    const newOrder = await this.order.createOrder(
+      userId,
+      order.products,
+      order.status,
+      order.timestamp,
+      order.orderTotal
+    );
     return newOrder;
   }
 
@@ -60,7 +69,6 @@ class OrderAPIClass {
     const completedOrder = await this.order.completeOrder(orderId);
     return completedOrder;
   }
-
 }
 
 export const orderAPI = new OrderAPIClass();

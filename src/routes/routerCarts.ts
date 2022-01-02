@@ -18,7 +18,7 @@ const router = Router();
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *     responses:
  *       200:
  *         description: get cart by userId
@@ -33,7 +33,7 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *                  $ref: '#/components/schemas/400BadRequest' 
+ *                  $ref: '#/components/schemas/400BadRequest'
  */
 router.get('/', authController.checkUserAuth, asyncHandler(cartController.getCart as any));
 
@@ -49,7 +49,7 @@ router.get('/', authController.checkUserAuth, asyncHandler(cartController.getCar
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *     requestBody:
  *       required: true
  *       content:
@@ -93,7 +93,7 @@ router.post(
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *     requestBody:
  *       required: true
  *       content:
@@ -136,7 +136,7 @@ router.post(
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *     requestBody:
  *       required: true
  *       content:

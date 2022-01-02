@@ -9,21 +9,22 @@ import asyncHandler from 'express-async-handler';
 
 const router = Router();
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, process.cwd() + '/assets/images')},
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname)
-    }
+  destination: (req, file, cb) => {
+    cb(null, process.cwd() + '/assets/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
 const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1024 * 1024 * 5 }, //! limite 5MB
-    fileFilter: (req, file, cb) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'));
-        }
-        cb(undefined, true);
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 5 }, //! limite 5MB
+  fileFilter: (req, file, cb) => {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error('Please upload an image'));
     }
+    cb(undefined, true);
+  }
 });
 
 /**
@@ -55,7 +56,7 @@ const upload = multer({
  *         content:
  *           application/json:
  *             schema:
- *                  $ref: '#/components/schemas/400BadRequest' 
+ *                  $ref: '#/components/schemas/400BadRequest'
  */
 router.get('/:id', productsController.checkValidId, asyncHandler(imageController.getImages as any));
 
@@ -71,7 +72,7 @@ router.get('/:id', productsController.checkValidId, asyncHandler(imageController
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *       - in: path
  *         id: Product ID
  *         schema:
@@ -82,7 +83,7 @@ router.get('/:id', productsController.checkValidId, asyncHandler(imageController
  *       - in: body
  *         name: file
  *         schema:
- *           $ref: '#/components/schemas/NewImageInput'  
+ *           $ref: '#/components/schemas/NewImageInput'
  *     responses:
  *       200:
  *         description: Returns array of images
@@ -101,13 +102,13 @@ router.get('/:id', productsController.checkValidId, asyncHandler(imageController
  *         content:
  *           application/json:
  *             schema:
- *                  $ref: '#/components/schemas/400BadRequest' 
+ *                  $ref: '#/components/schemas/400BadRequest'
  *       401:
  *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
- *                  $ref: '#/components/schemas/401Unauthorized' 
+ *                  $ref: '#/components/schemas/401Unauthorized'
  */
 router.post(
   '/upload/:id',
@@ -115,7 +116,7 @@ router.post(
   isAdmin,
   productsController.checkValidId,
   upload.single('file'),
-  asyncHandler(imageMiddleware.uploadImage as any), 
+  asyncHandler(imageMiddleware.uploadImage as any),
   asyncHandler(imageController.uploadImage as any)
 );
 
@@ -131,7 +132,7 @@ router.post(
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *       - in: path
  *         id: Product ID
  *         schema:
@@ -165,13 +166,13 @@ router.post(
  *         content:
  *           application/json:
  *             schema:
- *                  $ref: '#/components/schemas/400BadRequest' 
+ *                  $ref: '#/components/schemas/400BadRequest'
  *       401:
  *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
- *                  $ref: '#/components/schemas/401Unauthorized' 
+ *                  $ref: '#/components/schemas/401Unauthorized'
  */
 router.delete(
   '/:id',
@@ -179,12 +180,12 @@ router.delete(
   isAdmin,
   productsController.checkValidId,
   asyncHandler(imageMiddleware.deleteImage as any),
-    asyncHandler(imageController.deleteImage as any),
-    (req: any, res: any) => {
-        res.status(200).json({
-            msg: 'Imagen eliminada correctamente'
-        });
-    }
+  asyncHandler(imageController.deleteImage as any),
+  (req: any, res: any) => {
+    res.status(200).json({
+      msg: 'Imagen eliminada correctamente'
+    });
+  }
 );
 
 export default router;

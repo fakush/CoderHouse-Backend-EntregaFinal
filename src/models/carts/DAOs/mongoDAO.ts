@@ -69,7 +69,8 @@ export class PersistenciaMongo implements CartBaseClass {
     if (!cart) throw new Error('Cart not found');
     const index = cart.products.findIndex((aProduct) => aProduct._id == product._id);
     if (index < 0) throw new Error('Product not found');
-    if (cart.products[index].amount < product.amount) throw new Error('Product amount is less than the amount to delete');
+    if (cart.products[index].amount < product.amount)
+      throw new Error('Product amount is less than the amount to delete');
     if (cart.products[index].amount == product.amount) cart.products.splice(index, 1);
     else cart.products[index].amount -= product.amount;
     await cart.save();

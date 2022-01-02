@@ -41,7 +41,7 @@ const venv = {
 
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || 'cloudName',
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || 'apiKey',
-  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || 'apiSecret',
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || 'apiSecret'
 };
 
 export default venv;

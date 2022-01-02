@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema<OrderObject>({
   products: [{ _id: Schema.Types.ObjectId, amount: Number }],
   status: { type: String, required: true },
   timestamp: { type: String, required: true },
-  orderTotal: { type: Number, required: true },
+  orderTotal: { type: Number, required: true }
 });
 
 const dbCollection = 'orders';
@@ -41,8 +41,14 @@ export class PersistenciaMongo implements OrderBaseClass {
     return item;
   }
 
-  async createOrder(userId: string, products: object[], status: string, timestamp: string, orderTotal: number): Promise<OrderObject> {
-    const newOrder = new this.orders({ userId, products, status, timestamp, orderTotal});
+  async createOrder(
+    userId: string,
+    products: object[],
+    status: string,
+    timestamp: string,
+    orderTotal: number
+  ): Promise<OrderObject> {
+    const newOrder = new this.orders({ userId, products, status, timestamp, orderTotal });
     await newOrder.save();
     return newOrder;
   }

@@ -3,7 +3,7 @@ import { productsAPI } from '../apis/productsAPI';
 import { cartAPI } from '../apis/cartsAPI';
 import { orderAPI } from '../apis/ordersAPI';
 import { UserObject } from '../models/users/users.interface';
-import {EmailService} from '../services/mailer';
+import { EmailService } from '../services/mailer';
 import { productsController } from './productsController';
 import { Logger } from '../utils/logger';
 

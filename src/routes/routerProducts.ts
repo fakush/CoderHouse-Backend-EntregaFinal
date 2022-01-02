@@ -107,7 +107,11 @@ router.get('/', asyncHandler(productsController.getProducts as any));
  *             schema:
  *               $ref: '#/components/schemas/400BadRequest'
  */
-router.get('/:category', productsController.checkValidCategory, asyncHandler(productsController.getProductsByCategory as any));
+router.get(
+  '/:category',
+  productsController.checkValidCategory,
+  asyncHandler(productsController.getProductsByCategory as any)
+);
 
 /**
  * @swagger
@@ -121,7 +125,7 @@ router.get('/:category', productsController.checkValidCategory, asyncHandler(pro
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *     requestBody:
  *       required: true
  *       content:
@@ -165,7 +169,7 @@ router.post(
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *     requestBody:
  *       required: true
  *       content:
@@ -210,7 +214,7 @@ router.patch(
  *         name: x-auth-token
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/x-auth-token' 
+ *           $ref: '#/components/schemas/x-auth-token'
  *       - in: path
  *         name: id
  *         schema:

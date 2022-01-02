@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./dist/src/index.js --cluster",
     "build": "node_modules/.bin/tsc",
+    "prettier": "node_modules/.bin/prettier --write ./src/**/*.{ts,json} --ignore-path .gitignore",
     "test": "jest --forceExit",
     "test:openHandles": "jest --detectOpenHandles",
     "dev": "nodemon",

@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { productsAPI } from '../apis/productsAPI';
-import { ProductQuery, productsJoiSchema, productUpdateJoiSchema, categoryArray } from '../models/products/products.interface';
+import {
+  ProductQuery,
+  productsJoiSchema,
+  productUpdateJoiSchema,
+  categoryArray
+} from '../models/products/products.interface';
 import { Logger } from '../utils/logger';
 
 class Product {
@@ -42,7 +47,7 @@ class Product {
   }
 
   async checkAndUpdateStock(req: Request, res: Response, next: NextFunction) {
-    const {product, amount} = req.body;
+    const { product, amount } = req.body;
     if (typeof Number(amount) !== 'number') {
       return res.status(400).json({
         msg: 'invalid amount'
@@ -77,29 +82,29 @@ class Product {
 
   async getProducts(req: Request, res: Response) {
     try {
-    const id = req.params.id;
-    const { name, description, category, price, stock, stockMin, stockMax, priceMin, priceMax } = req.query;
-    if (id) {
-      const producto = await productsAPI.getProducts(id);
-      if (!producto) res.status(404).json({ msg: `product not found` });
-      return res.json({ data: producto });
-    }
+      const id = req.params.id;
+      const { name, description, category, price, stock, stockMin, stockMax, priceMin, priceMax } = req.query;
+      if (id) {
+        const producto = await productsAPI.getProducts(id);
+        if (!producto) res.status(404).json({ msg: `product not found` });
+        return res.json({ data: producto });
+      }
 
-    const query: ProductQuery = {};
-    if (name) query.name = name.toString();
-    if (description) query.description = description.toString();
-    if (category) query.category = category.toString();
-    if (price) query.price = Number(price);
-    if (priceMin) query.priceMin = Number(priceMin);
-    if (priceMax) query.priceMax = Number(priceMax);
-    if (stock) query.stock = Number(stock);
-    if (stockMin) query.stockMin = Number(stockMin);
-    if (stockMax) query.stockMax = Number(stockMax);
-    if (Object.keys(query).length) {
-      return res.json({ data: await productsAPI.query(query) });
-    }
+      const query: ProductQuery = {};
+      if (name) query.name = name.toString();
+      if (description) query.description = description.toString();
+      if (category) query.category = category.toString();
+      if (price) query.price = Number(price);
+      if (priceMin) query.priceMin = Number(priceMin);
+      if (priceMax) query.priceMax = Number(priceMax);
+      if (stock) query.stock = Number(stock);
+      if (stockMin) query.stockMin = Number(stockMin);
+      if (stockMax) query.stockMax = Number(stockMax);
+      if (Object.keys(query).length) {
+        return res.json({ data: await productsAPI.query(query) });
+      }
 
-    return res.json({ data: await productsAPI.getProducts() });
+      return res.json({ data: await productsAPI.getProducts() });
     } catch (error: any) {
       res.status(400).json({ msg: error.message });
     }
@@ -107,12 +112,12 @@ class Product {
 
   async getProductsByCategory(req: Request, res: Response) {
     try {
-    const category = req.params.category;
-    const productos = await productsAPI.getProductsByCategory(category);
-    if (productos.length < 1) {
-      return res.status(404).json({ msg: `product not found` });
-    }
-    return res.json({ data: productos });
+      const category = req.params.category;
+      const productos = await productsAPI.getProductsByCategory(category);
+      if (productos.length < 1) {
+        return res.status(404).json({ msg: `product not found` });
+      }
+      return res.json({ data: productos });
     } catch (error: any) {
       res.status(400).json({ msg: error.message });
     }
@@ -120,8 +125,8 @@ class Product {
 
   async addProducts(req: Request, res: Response) {
     try {
-    const newItem = await productsAPI.addProduct(req.body);
-    return res.status(201).json({ msg: 'creando productos', data: newItem });
+      const newItem = await productsAPI.addProduct(req.body);
+      return res.status(201).json({ msg: 'creando productos', data: newItem });
     } catch (error: any) {
       res.status(400).json({ msg: error.message });
     }
@@ -129,12 +134,12 @@ class Product {
 
   async updateProducts(req: Request, res: Response) {
     try {
-    const id = req.params.id;
-    const updatedItem = await productsAPI.updateProduct(id, req.body);
-    res.json({
-      msg: 'actualizando productos',
-      data: updatedItem
-    });
+      const id = req.params.id;
+      const updatedItem = await productsAPI.updateProduct(id, req.body);
+      res.json({
+        msg: 'actualizando productos',
+        data: updatedItem
+      });
     } catch (error: any) {
       res.status(400).json({ msg: error.message });
     }
@@ -142,11 +147,11 @@ class Product {
 
   async deleteProducts(req: Request, res: Response) {
     try {
-    const id = req.params.id;
-    await productsAPI.deleteProduct(id);
-    return res.status(200).json({
-      msg: 'borrando productos'
-    });
+      const id = req.params.id;
+      await productsAPI.deleteProduct(id);
+      return res.status(200).json({
+        msg: 'borrando productos'
+      });
     } catch (error: any) {
       res.status(400).json({ msg: error.message });
     }

@@ -20,25 +20,25 @@ const router = Router();
  *               $ref: '#/components/schemas/InfoData'
  */
 router.get('/', async (req, res) => {
-    let getData = {
-      'Argumentos de entrada': JSON.stringify(allArguments),
-      'Versión de node': process.version,
-      'Versión de express': require('express/package.json').version,
-      'Versión de mongoose': require('mongoose/package.json').version,
-      'Versión de mongodb': require('mongodb/package.json').version,
-      'Carpeta corriente': process.execPath,
-      'Carpeta de trabajo': process.execPath,
-      'Path de ejecución': process.cwd(),
-      'Nombre del usuario': os.userInfo().username,
-      'Nombre de la plataforma': process.platform,
-      'Nombre del sistema operativo': os.platform(),
-      'Nombre del sistema': os.hostname(),
-      'HomeDir': os.userInfo().homedir,
-      'Process id': process.pid,
-      'Numero de CPUs': os.cpus().length,
-      'Uso de memoria': process.memoryUsage()
-    };
-    res.status(200).json(getData);
+  let getData = {
+    'Argumentos de entrada': JSON.stringify(allArguments),
+    'Versión de node': process.version,
+    'Versión de express': require('express/package.json').version,
+    'Versión de mongoose': require('mongoose/package.json').version,
+    'Versión de mongodb': require('mongodb/package.json').version,
+    'Carpeta corriente': process.execPath,
+    'Carpeta de trabajo': process.execPath,
+    'Path de ejecución': process.cwd(),
+    'Nombre del usuario': os.userInfo().username,
+    'Nombre de la plataforma': process.platform,
+    'Nombre del sistema operativo': os.platform(),
+    'Nombre del sistema': os.hostname(),
+    HomeDir: os.userInfo().homedir,
+    'Process id': process.pid,
+    'Numero de CPUs': os.cpus().length,
+    'Uso de memoria': process.memoryUsage()
+  };
+  res.status(200).json(getData);
 });
 
 export default router;

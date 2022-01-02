@@ -61,7 +61,12 @@ router.post('/login', authController.checkValidUserAndPassword, asyncHandler(aut
  *             schema:
  *               $ref: '#/components/schemas/400BadRequest'
  */
-router.post('/signup', authController.checkSamePassword, authController.checkExistingUser, asyncHandler(authController.signup as any));
+router.post(
+  '/signup',
+  authController.checkSamePassword,
+  authController.checkExistingUser,
+  asyncHandler(authController.signup as any)
+);
 
 router.get('/secure-data', authController.checkUserAuth, (req, res) => {
   res.json({ msg: 'Llegaste a la data segura' });
@@ -196,4 +201,4 @@ export default router;
  *           type: string
  *           description: Message
  *           example: "Unathorized"
- */ 
+ */
