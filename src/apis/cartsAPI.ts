@@ -20,7 +20,7 @@ class cartAPIClass {
     const user = await authAPI.findUser(userId);
     Logger.info(`Creating cart for user ${user.username}`);
     if (!user) throw new Error('User does not exist. Error creating cart');
-    const newCart = await this.cart.createCart(userId);
+    const newCart = await this.cart.createCart(userId, user.address);
     return newCart;
   }
 

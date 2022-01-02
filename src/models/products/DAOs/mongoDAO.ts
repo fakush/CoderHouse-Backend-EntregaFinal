@@ -13,7 +13,7 @@ const productsSchema = new mongoose.Schema<ProductObject>({
   category: { type: String, required: true },
   price: { type: Number, required: true },
   stock: { type: Number, required: true },
-  images: { type: Array, default: [], required: true }
+  images: { type: Array, default: [], required: false }
 });
 
 // Define en que colección de la DB se va a escribir la data de productos.
@@ -122,7 +122,7 @@ export class PersistenciaMongo implements ProductBaseClass {
     if (options.stockMin) query.stock = { $gte: options.stockMin } as unknown as number;
     if (options.stockMin && options.stockMax)
       query.stock = { $gte: Number(options.stockMin), $lte: Number(options.stockMax) } as unknown as number;
-    Logger.debug('Query: ', query);
+    // Logger.debug('Query: ', query);
     return this.products.find(query);
   }
 }

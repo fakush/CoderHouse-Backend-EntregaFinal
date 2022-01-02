@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { controllerAuth } from '../controllers/authController';
+import { authController } from '../controllers/authController';
 import { isAdmin } from '../middlewares/isAdmin';
 import asyncHandler from 'express-async-handler';
 
@@ -25,14 +25,14 @@ const router = Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/loggedData'
- *       400:
- *         description: Bad request
+ *       401:
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/400BadRequest'
+ *               $ref: '#/components/schemas/401InvalidCredentials'
  */
-router.post('/login', controllerAuth.checkValidUserAndPassword, asyncHandler(controllerAuth.login));
+router.post('/login', authController.checkValidUserAndPassword, asyncHandler(authController.login));
 
 /**
  * @swagger
@@ -61,9 +61,9 @@ router.post('/login', controllerAuth.checkValidUserAndPassword, asyncHandler(con
  *             schema:
  *               $ref: '#/components/schemas/400BadRequest'
  */
-router.post('/signup', controllerAuth.checkExistingUser, asyncHandler(controllerAuth.signup));
+router.post('/signup', authController.checkSamePassword, authController.checkExistingUser, asyncHandler(authController.signup as any));
 
-router.get('/secure-data', controllerAuth.checkUserAuth, (req, res) => {
+router.get('/secure-data', authController.checkUserAuth, (req, res) => {
   res.json({ msg: 'Llegaste a la data segura' });
 });
 
@@ -159,9 +159,17 @@ export default router;
  *           description: Last Name
  *           example: Barreda
  *         address:
- *           type: string
- *           description: Address
- *           example: Springfield Elementary School #1
+ *           type: Object
+ *           description: Delivery address
+ *           example: {
+ *             street: "Av. Siempreviva",
+ *             number: "456",
+ *             floor: 0,
+ *             apartment: "A",
+ *             postalCode: "1425",
+ *             city: "Springfield",
+ *             state: "IL"
+ *           }
  *         phone:
  *           type: string
  *           description: Phone Number
@@ -174,4 +182,18 @@ export default router;
  *           type: boolean
  *           description: Is Admin
  *           example: true
+ *     401InvalidCredentials:
+ *       type: object
+ *       properties:
+ *         msg:
+ *           type: string
+ *           description: Message
+ *           example: "Invalid Username/Password"
+ *     401Unauthorized:
+ *       type: object
+ *       properties:
+ *         msg:
+ *           type: string
+ *           description: Message
+ *           example: "Unathorized"
  */ 

@@ -14,10 +14,10 @@ const UserSchema = new Schema<UserObject>({
   password: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  address: { type: String, required: true },
+  address: { type: Object, required: true },
   phone: { type: String, required: true },
   age: { type: Number, required: true },
-  isAdmin: { type: Boolean, required: true },
+  isAdmin: { type: Boolean, required: false },
   timestamp: { type: String, required: true }
 });
 
@@ -79,6 +79,9 @@ export class PersistenciaMongo implements UserBaseClass {
       address: data.address,
       phone: data.phone,
       age: data.age,
+      //! ----------------------------------------------------------
+      //! Por seguridad, no se permite el registro de administradores.
+      //! ----------------------------------------------------------
       isAdmin: false,
       timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
     };

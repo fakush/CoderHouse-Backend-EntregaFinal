@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { cartAPI } from '../apis/cartsAPI';
+import { UserObject } from '../models/users/users.interface';
 import { orderAPI } from '../apis/ordersAPI';
-import { authAPI } from '../apis/authAPI';
 import { EmailService } from '../services/mailer';
 import { Logger } from '../utils/logger';
-import config from '../config';
 
 class Orders {
   async lookForId(req: Request, res: Response, next: NextFunction) {
@@ -15,25 +13,49 @@ class Orders {
   }
 
   async getOrders(req: Request, res: Response) {
-    const userId = req.params.id;
-    const cart = await orderAPI.getOrders(userId);
-    if (!cart) res.status(401).json({ msg: `Order not found` });
-    return res.json({ data: cart });
+    try {
+      const user: UserObject = req.user as UserObject;
+      const userId = user._id;
+      const order = await orderAPI.getOrders(userId);
+      if (!order) res.status(400).json({ msg: `Order not found` });
+      return res.json({ data: order });
+    } catch (error: any) {
+      return res.status(400).json({ msg: error.message });
+    }
   }
 
-  async createOrder(req: Request, res: Response) {
-    const cartId = req.params.id;
-    const userData = await authAPI.findUser(cartId);
-    Logger.debug(`Creating Order`);
-    const newOrder = await orderAPI.createOrder(cartId);
-    await cartAPI.emptyCart(cartId);
-    // Enviando Email de notificación al administrador - OK
-    EmailService.sendEmail(
-      config.ETHEREAL_EMAIL,
-      `Nuevo pedido de: ${userData.username} - ${userData.email}`,
-      `Nuevo pedido: ${newOrder.products}`
-    );
+  async getOrdersbyId(req: Request, res: Response) {
+    try {
+      const orderId = req.params.orderId;
+      const order = await orderAPI.getOrderById(orderId);
+      if (!order) res.status(400).json({ msg: `Order not found` });
+      const user: UserObject = req.user as UserObject;
+      const userId = user._id;
+      //! Revisar si el usuario es el dueño del pedido
+      if (order.userId.toString() !== userId.toString()) return res.status(400).json({ msg: `Order not found` });
+      return res.json({ data: order });
+    } catch (error: any) {
+      return res.status(400).json({ msg: error.message });
+    }
+  }
+
+  async completeOrder(req: Request, res: Response) {
+    try {
+      const user: UserObject = req.user as UserObject;
+      const userId = user._id;
+      const orderId = req.body._id;
+      const order = await orderAPI.getOrderById(orderId);
+      Logger.debug(`Completing order ${orderId}`);
+      if (!order) return res.status(400).json({ msg: `Order not found` });
+      //! Revisar si el usuario es el dueño del pedido
+      if (order.userId.toString() !== userId.toString()) return res.status(400).json({ msg: `Order not found` });
+      const updatedOrder = await orderAPI.completeOrder(orderId);
+      EmailService.sendEmail(user.email, 'Your Order was Completed', JSON.stringify(updatedOrder));
+      return res.json({ data: updatedOrder });
+    } catch (error: any) {
+      return res.status(400).json({ msg: error.message });
+    }
   }
 }
 
-export const controllerOrders = new Orders();
+export const ordersController = new Orders();

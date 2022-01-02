@@ -1,6 +1,7 @@
 import { OrderObject } from '../models/orders/orders.interface';
 import { OrderFactory, Persistencia } from '../models/orders/orders.factory';
 import { cartAPI } from './cartsAPI';
+import { productsAPI } from './productsAPI';
 import { Logger } from '../utils/logger';
 import { PersistenceArgument } from '../config/arguments';
 
@@ -18,21 +19,48 @@ class OrderAPIClass {
     return await this.order.find(orderId);
   }
 
-  async getOrders(userId: string): Promise<OrderObject> {
+  async getOrders(userId: string): Promise<OrderObject[]> {
     return await this.order.getOrders(userId);
+  }
+
+  async getOrderById(id: string): Promise<OrderObject> {
+    return await this.order.getOrderById(id);
   }
 
   async createOrder(userId: string): Promise<OrderObject> {
     const cart = await cartAPI.getCart(userId);
-    Logger.debug(`Creating order for cart ${cartAPI}`);
+    Logger.debug(`Creating order for cart ${cart._id}`);
     if (!cart) throw new Error('Cart does not exist. Error creating order');
-    const newOrder = await this.order.createOrder(userId, cart.products);
+    const getPrice = async (product: any) => await productsAPI.getProducts(product._id).then(product => product[0].price);
+    const products = await Promise.all(cart.products.map(async product => {
+      const price = await getPrice(product);
+      return {
+        _id: product._id,
+        amount: product.amount,
+        price
+      };
+    }));
+    Logger.debug(`Products: ${JSON.stringify(products)}`);
+    const orderTotal = products.reduce((total, product) => total + product.price * product.amount, 0);
+    const order = {
+      userId: cart.userId,
+      products: products,
+      status: 'Generated',
+      timestamp: Date.now().toString(),
+      orderTotal: orderTotal
+    }
+    const newOrder = await this.order.createOrder(userId, order.products, order.status, order.timestamp, order.orderTotal);
     return newOrder;
   }
 
-  async deleteProduct(orderId: string) {
-    return await this.order.deleteOrder(orderId);
+  async completeOrder(orderId: string): Promise<OrderObject> {
+    const order = await this.order.getOrderById(orderId);
+    if (!order) throw new Error('Order does not exist. Error completing order');
+    if (order.status !== 'Generated') throw new Error('Order is not in generated status. Error completing order');
+    const completedOrder = await this.order.completeOrder(orderId);
+    return completedOrder;
   }
+
 }
 
 export const orderAPI = new OrderAPIClass();

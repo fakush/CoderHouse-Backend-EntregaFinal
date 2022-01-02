@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { productsController } from '../controllers/productsController';
-import { controllerAuth } from '../controllers/authController';
+import { authController } from '../controllers/authController';
 import { isAdmin } from '../middlewares/isAdmin';
 import asyncHandler from 'express-async-handler';
 
@@ -10,9 +10,55 @@ const router = Router();
  * @swagger
  * /api/products/:
  *   get:
- *     summary: Retuns all products
+ *     summary: Retuns all products / products by query
  *     tags:
  *       - Products
+ *     parameters:
+ *       - name: name
+ *         in: query
+ *         description: name of the product
+ *         required: false
+ *         type: string
+ *       - name: description
+ *         in: query
+ *         description: description of the product
+ *         required: false
+ *         type: string
+ *       - name: category
+ *         in: query
+ *         description: category of the product
+ *         required: false
+ *         type: string
+ *       - name: price
+ *         in: query
+ *         description: price of the product
+ *         required: false
+ *         type: number
+ *       - name: priceMin
+ *         in: query
+ *         description: minimum price of the product
+ *         required: false
+ *         type: number
+ *       - name: priceMax
+ *         in: query
+ *         description: maximum price of the product
+ *         required: false
+ *         type: number
+ *       - name: stock
+ *         in: query
+ *         description: stock of the product
+ *         required: false
+ *         type: number
+ *       - name: stockMin
+ *         in: query
+ *         description: minimum stock of the product
+ *         required: false
+ *         type: number
+ *       - name: stockMax
+ *         in: query
+ *         description: maximum stock of the product
+ *         required: false
+ *         type: number
  *     responses:
  *       200:
  *         description: Returns array of products
@@ -33,18 +79,18 @@ router.get('/', asyncHandler(productsController.getProducts as any));
 
 /**
  * @swagger
- * /api/products/:id:
+ * /api/products/:category:
  *   get:
- *     summary: Returns a product
+ *     summary: Returns all products by category
  *     tags:
  *       - Products
  *     parameters:
  *       - in: path
- *         id: userId
+ *         id: category
  *         schema:
  *           type: string
  *         required: true
- *         description: product ID
+ *         description: category of the product
  *     responses:
  *       200:
  *         description: get product data
@@ -61,7 +107,7 @@ router.get('/', asyncHandler(productsController.getProducts as any));
  *             schema:
  *               $ref: '#/components/schemas/400BadRequest'
  */
-router.get('/:id', productsController.checkValidId, asyncHandler(productsController.getProducts as any));
+router.get('/:category', productsController.checkValidCategory, asyncHandler(productsController.getProductsByCategory as any));
 
 /**
  * @swagger
@@ -70,6 +116,12 @@ router.get('/:id', productsController.checkValidId, asyncHandler(productsControl
  *     summary: Creates a new product
  *     tags:
  *       - Products
+ *     parameters:
+ *       - in: header
+ *         name: x-auth-token
+ *         required: true
+ *         schema:
+ *           $ref: '#/components/schemas/x-auth-token' 
  *     requestBody:
  *       required: true
  *       content:
@@ -77,7 +129,7 @@ router.get('/:id', productsController.checkValidId, asyncHandler(productsControl
  *           schema:
  *             $ref: '#/components/schemas/NewProductInput'
  *     responses:
- *       200:
+ *       201:
  *         description: Returns created product
  *         content:
  *           application/json:
@@ -95,7 +147,7 @@ router.get('/:id', productsController.checkValidId, asyncHandler(productsControl
  */
 router.post(
   '/',
-  controllerAuth.checkUserAuth,
+  authController.checkUserAuth,
   isAdmin,
   productsController.checkValidProduct,
   asyncHandler(productsController.addProducts as any)
@@ -104,17 +156,16 @@ router.post(
 /**
  * @swagger
  * /api/products/:id:
- *   put:
+ *   patch:
  *     summary: Updates a product
  *     tags:
  *       - Products
  *     parameters:
- *       - in: path
- *         id: userId
- *         schema:
- *           type: string
+ *       - in: header
+ *         name: x-auth-token
  *         required: true
- *         description: product ID
+ *         schema:
+ *           $ref: '#/components/schemas/x-auth-token' 
  *     requestBody:
  *       required: true
  *       content:
@@ -138,12 +189,12 @@ router.post(
  *             schema:
  *               $ref: '#/components/schemas/400BadRequest'
  */
-router.put(
+router.patch(
   '/:id?',
-  controllerAuth.checkUserAuth,
+  authController.checkUserAuth,
   isAdmin,
   productsController.checkValidId,
-  productsController.checkValidProduct,
+  productsController.checkValidUpdate,
   asyncHandler(productsController.updateProducts)
 );
 
@@ -155,8 +206,13 @@ router.put(
  *     tags:
  *       - Products
  *     parameters:
+ *       - in: header
+ *         name: x-auth-token
+ *         required: true
+ *         schema:
+ *           $ref: '#/components/schemas/x-auth-token' 
  *       - in: path
- *         id: userId
+ *         name: id
  *         schema:
  *           type: string
  *         required: true
@@ -180,7 +236,7 @@ router.put(
  */
 router.delete(
   '/:id?',
-  controllerAuth.checkUserAuth,
+  authController.checkUserAuth,
   isAdmin,
   productsController.checkValidId,
   asyncHandler(productsController.deleteProducts as any)

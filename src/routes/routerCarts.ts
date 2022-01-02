@@ -1,23 +1,24 @@
 import { Router } from 'express';
 import { cartController } from '../controllers/cartsController';
+import { authController } from '../controllers/authController';
 import asyncHandler from 'express-async-handler';
+import { productsController } from '../controllers/productsController';
 
 const router = Router();
 
 /**
  * @swagger
- * /api/cart/:id:
+ * /api/cart:
  *   get:
  *     summary: Devuelve un carrito
  *     tags:
  *       - Cart
  *     parameters:
- *       - in: path
- *         id: userId
- *         schema:
- *           type: string
+ *       - in: header
+ *         name: x-auth-token
  *         required: true
- *         description: ID del usuario al que pertenece el carrito
+ *         schema:
+ *           $ref: '#/components/schemas/x-auth-token' 
  *     responses:
  *       200:
  *         description: get cart by userId
@@ -34,22 +35,21 @@ const router = Router();
  *             schema:
  *                  $ref: '#/components/schemas/400BadRequest' 
  */
-router.get('/:id', cartController.lookForId, asyncHandler(cartController.getCart as any));
+router.get('/', authController.checkUserAuth, asyncHandler(cartController.getCart as any));
 
 /**
  * @swagger
- * /api/cart/:id:
+ * /api/cart/add/:
  *   post:
  *     summary: Ingresa un producto al carrito
  *     tags:
  *       - Cart
  *     parameters:
- *       - in: path
- *         id: userId
- *         schema:
- *           type: string
+ *       - in: header
+ *         name: x-auth-token
  *         required: true
- *         description: ID del usuario al que pertenece el carrito
+ *         schema:
+ *           $ref: '#/components/schemas/x-auth-token' 
  *     requestBody:
  *       required: true
  *       content:
@@ -73,22 +73,27 @@ router.get('/:id', cartController.lookForId, asyncHandler(cartController.getCart
  *             schema:
  *               $ref: '#/components/schemas/400BadRequest'
  */
-router.post('/:id', cartController.lookForId, asyncHandler(cartController.add2Cart as any));
+router.post(
+  '/add/',
+  authController.checkUserAuth,
+  productsController.checkValidId,
+  productsController.checkAndUpdateStock,
+  asyncHandler(cartController.add2Cart as any)
+);
 
 /**
  * @swagger
- * /api/cart/:id:
- *   delete:
+ * /api/cart/delete:
+ *   post:
  *     summary: Elimina un producto del carrito o actualiza la cantidad de productos
  *     tags:
  *       - Cart
  *     parameters:
- *       - in: path
- *         id: userId
- *         schema:
- *           type: string
+ *       - in: header
+ *         name: x-auth-token
  *         required: true
- *         description: ID del usuario al que pertenece el carrito
+ *         schema:
+ *           $ref: '#/components/schemas/x-auth-token' 
  *     requestBody:
  *       required: true
  *       content:
@@ -112,7 +117,50 @@ router.post('/:id', cartController.lookForId, asyncHandler(cartController.add2Ca
  *             schema:
  *               $ref: '#/components/schemas/400BadRequest'
  */
-router.delete('/:id', cartController.lookForId, asyncHandler(cartController.deleteProducts as any));
+router.post(
+  '/delete',
+  authController.checkUserAuth,
+  productsController.checkValidId,
+  asyncHandler(cartController.deleteProducts as any)
+);
+
+/**
+ * @swagger
+ * /api/cart/submit:
+ *   post:
+ *     summary: Envia el carrito a la base de datos de ordenes de compra y lo vacia.
+ *     tags:
+ *       - Cart
+ *     parameters:
+ *       - in: header
+ *         name: x-auth-token
+ *         required: true
+ *         schema:
+ *           $ref: '#/components/schemas/x-auth-token' 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewCartInput'
+ *     responses:
+ *       200:
+ *         description: Devuelve el carrito con el producto ingresado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items :
+ *                  msg: 'creando productos'
+ *                  $ref: '#/components/schemas/CartData'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/400BadRequest'
+ */
+router.post('/submit', authController.checkUserAuth, asyncHandler(cartController.submitCart as any));
 
 export default router;
 
@@ -125,16 +173,36 @@ export default router;
  *       properties:
  *         _id:
  *           type: String
- *           description: ID del producto
+ *           description: Product ID
  *           example: "614dfd26ea29ad3f194bad80"
  *         userId:
  *           type: String
- *           description: ID del usuario al que pertenece el carrito
+ *           description: User ID
  *           example: "618d72256fc267b7222e8bce"
  *         products:
  *           type: Array
- *           description: Lista de productos que contiene el carrito
+ *           description: List of products in the cart
  *           example: [{product: "614dfd26ea29ad3f194bad80", amount: 1}]
+ *         dateCreated:
+ *           type: String
+ *           description: Date of creation
+ *           example: "2019-12-12T12:12:12.000Z"
+ *         dateUpdated:
+ *           type: String
+ *           description: Date of last update
+ *           example: "2019-12-12T12:12:12.000Z"
+ *         DeliveryAddress:
+ *           type: Object
+ *           description: Delivery address
+ *           example: {
+ *             street: "Av. Siempreviva",
+ *             number: "456",
+ *             floor: 0,
+ *             apartment: "A",
+ *             postalCode: "1425",
+ *             city: "Springfield",
+ *             state: "IL"
+ *           }
  *     NewCartInput:
  *       type: object
  *       properties:

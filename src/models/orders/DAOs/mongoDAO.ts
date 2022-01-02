@@ -6,7 +6,10 @@ import { Logger } from '../../../utils/logger';
 //MongoSchema
 const orderSchema = new mongoose.Schema<OrderObject>({
   userId: { type: Schema.Types.ObjectId, required: true },
-  products: [{ _id: Schema.Types.ObjectId, amount: Number }]
+  products: [{ _id: Schema.Types.ObjectId, amount: Number }],
+  status: { type: String, required: true },
+  timestamp: { type: String, required: true },
+  orderTotal: { type: Number, required: true },
 });
 
 const dbCollection = 'orders';
@@ -26,21 +29,30 @@ export class PersistenciaMongo implements OrderBaseClass {
     return true;
   }
 
-  async getOrders(userId: string): Promise<OrderObject> {
-    const item = await this.orders.findOne({ userId });
+  async getOrders(userId: string): Promise<OrderObject[]> {
+    const item = await this.orders.find({ userId });
     if (!item) throw new Error('No existe orden del usuario');
     return item;
   }
 
-  async createOrder(userId: string, products: object[]): Promise<OrderObject> {
-    const newOrder = new this.orders({ userId, products });
+  async getOrderById(id: string): Promise<OrderObject> {
+    const item = await this.orders.findById(id);
+    if (!item) throw new Error('No existe orden del usuario');
+    return item;
+  }
+
+  async createOrder(userId: string, products: object[], status: string, timestamp: string, orderTotal: number): Promise<OrderObject> {
+    const newOrder = new this.orders({ userId, products, status, timestamp, orderTotal});
     await newOrder.save();
     return newOrder;
   }
 
-  async deleteOrder(userId: string): Promise<OrderObject> {
-    const item = await this.orders.findByIdAndDelete(userId);
-    if (!item) throw new Error('No existe orden del usuario');
-    return item;
+  async completeOrder(id: string): Promise<OrderObject> {
+    const order = await this.orders.findById(id);
+    if (!order) throw new Error('No existe orden del usuario');
+    const completedOrder = await this.orders.findByIdAndUpdate(order._id, {
+      status: 'Delivered'
+    });
+    return completedOrder;
   }
 }

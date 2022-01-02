@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-// todo: import list of categories
+//todo: Feature improvement: import list of categories from table (out of this scope)
 export const categoryArray = [
   'Almacén',
   'Bebidas',
@@ -22,7 +22,16 @@ export const productsJoiSchema = Joi.object({
     .required(),
   price: Joi.number().required(),
   stock: Joi.number().min(1).max(2000).required(),
-  images: Joi.array().min(1).max(10).required()
+  images: Joi.array().min(1).max(10)
+});
+
+export const productUpdateJoiSchema = Joi.object({
+  name: Joi.string().min(3).max(50),
+  description: Joi.string().min(20).max(2000),
+  category: Joi.string().valid(...categoryArray),
+  price: Joi.number(),
+  stock: Joi.number().min(1).max(2000),
+  images: Joi.array().min(1).max(10)
 });
 
 export interface newProductObject {
@@ -33,6 +42,7 @@ export interface newProductObject {
   stock?: number;
   images?: any;
 }
+
 export interface ProductObject {
   _id?: string;
   timestamp: string;
@@ -54,6 +64,7 @@ export interface ProductQuery {
   priceMin?: number;
   priceMax?: number;
 }
+
 export interface ProductBaseClass {
   get(id?: string | undefined): Promise<ProductObject[]>;
   add(data: newProductObject): Promise<ProductObject>;

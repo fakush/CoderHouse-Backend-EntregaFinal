@@ -25,12 +25,13 @@ class ImageMiddleware {
     }
 
     async deleteImage(req: Request, res: Response, next: NextFunction) {
+        Logger.debug(`Deleting image ${req.body.image}`);
         const data = {image: req.body.image};
         if (!data.image) return res.status(400).json({ msg: 'missing image name' });
         await cloudinary.v2.uploader.destroy(data.image, (err: any, result: any) => {
             if (err) return res.status(400).json({ msg: 'error deleting image' });
-            next();
         });
+        next();
     }
 }
 

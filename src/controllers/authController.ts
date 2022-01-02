@@ -4,7 +4,6 @@ import { userJoiSchema, UserObject } from '../models/users/users.interface';
 import { generateAuthToken, checkAuth } from '../middlewares/auth';
 import { Logger } from '../utils/logger';
 
-//todo: is this needed?
 interface RequestUser extends Request {
   user?: UserObject;
 }
@@ -14,11 +13,8 @@ class authMiddleware {
       Logger.warn('Login attempt with no data.');
       return res.status(400).json({ msg: 'Incomplete or No data received' });
     }
-    // Logger.debug('Checking user and password');
-    // Logger.debug('req.body: ' + JSON.stringify(req.body));
     let { username, email, password } = req.body;
     const user = await authAPI.query(username, email);
-    // Logger.debug('User: ' + user.username + ' exists.');
     if (!user) {
       Logger.info('User: ' + user.username + ' invalid.');
       return res.status(401).json({ msg: 'Invalid Username/Password' });
@@ -44,24 +40,50 @@ class authMiddleware {
     next();
   }
 
+  checkSamePassword(req: Request, res: Response, next: NextFunction) {
+    if (!req.body || req.body.password === undefined || req.body.passwordConfirm === undefined) {
+      return res.status(400).json({ msg: 'Incomplete or No data received' });
+    }
+    const { password, passwordConfirm } = req.body;
+    if (password !== passwordConfirm) {
+      return res.status(400).json({ msg: 'Passwords do not match' });
+    }
+    delete req.body.passwordConfirm;
+    next();
+  }
+
   async login(req: Request, res: Response) {
-    let { username, email } = req.body;
-    const user = await authAPI.query(username, email);
-    const token = await generateAuthToken(user);
-    res.header('x-auth-token', token).status(200).json({
-      msg: 'login OK',
-      token
-    });
+    try {
+      let { username, email } = req.body;
+      const user = await authAPI.query(username, email);
+      const token = await generateAuthToken(user);
+      res.header('x-auth-token', token).status(200).json({
+        msg: 'login OK',
+        token
+      });
+    } catch (err: any) {
+      res.status(400).json({ msg: err.message });
+    }
   }
 
   async signup(req: Request, res: Response) {
-    await userJoiSchema.validate(req.body);
-    const newUser = await authAPI.signUpUser(req.body);
-    const token = await generateAuthToken(newUser);
-    res.header('x-auth-token', token).status(200).json({
-      msg: 'signup OK',
-      token
-    });
+    try {
+      if (!req.body || req.body.username === undefined || req.body.password === undefined) {
+        return res.status(400).json({ msg: 'Incomplete or No data received' });
+      }
+      if (await userJoiSchema.validate(req.body).error) {
+        return res.status(400).json({ msg: await userJoiSchema.validate(req.body).error.details[0].message });
+      }
+      const newUser = await authAPI.signUpUser(req.body);
+      const token = await generateAuthToken(newUser);
+      res.header('x-auth-token', token).status(201).json({
+        msg: 'signup OK',
+        user: newUser,
+        token
+      });
+    } catch (err: any) {
+      res.status(400).json({ msg: err.message });
+    }
   }
 
   async checkUserAuth(req: Request, res: Response, next: NextFunction) {
@@ -81,4 +103,4 @@ class authMiddleware {
   }
 }
 
-export const controllerAuth = new authMiddleware();
+export const authController = new authMiddleware();

@@ -15,6 +15,10 @@ class prodAPI {
     else return this.productos!.get();
   }
 
+  async getProductsByCategory(category: string) {
+    return await this.productos!.query({ category });
+  }
+
   async addProduct(productData: newProductObject): Promise<ProductObject> {
     const newProduct = await this.productos!.add(productData);
     return newProduct;

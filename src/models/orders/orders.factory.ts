@@ -14,14 +14,14 @@ export class OrderFactory {
   static get(tipo: Persistencia) {
     switch (tipo) {
       case Persistencia.Mongo:
-        Logger.debug('Carrito está escribiendo en MongoDB');
+        Logger.info('Orders está escribiendo en MongoDB');
         if (!OrderFactory.instance) {
           OrderFactory.instance = new PersistenciaMongo();
         }
         return OrderFactory.instance;
 
       default:
-        Logger.debug('Carrito está escribiendo en MongoDB por default');
+        Logger.info('Orders está escribiendo en MongoDB por default');
         if (!OrderFactory.instance) {
           OrderFactory.instance = new PersistenciaMongo();
         }

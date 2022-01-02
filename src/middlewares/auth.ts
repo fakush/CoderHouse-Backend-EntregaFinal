@@ -10,15 +10,13 @@ type TokenPayload = { userId: string; userName: String; email: String; admin: bo
 
 export const generateAuthToken = async (user: UserObject): Promise<string> => {
   const payload: TokenPayload = { userId: user._id, userName: user.username, email: user.email, admin: user.isAdmin };
-  const token = await jwt.sign(payload, Config.TOKEN_SECRET_KEY, { expiresIn: '1h' });
+  const token = await jwt.sign(payload, Config.JWT_SECRET_KEY, { expiresIn: Config.TOKEN_KEEP_ALIVE });
   return token;
 };
 
 export const checkAuth = async (token: any) => {
   try {
-    const decode: TokenPayload = await jwt.verify(token, Config.TOKEN_SECRET_KEY);
-    Logger.debug('TOKEN DECODIFICADO');
-    Logger.debug(decode);
+    const decode: TokenPayload = await jwt.verify(token, Config.JWT_SECRET_KEY);
     const user = await authAPI.findUser(decode.userId);
     return user;
   } catch (err) {

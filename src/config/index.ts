@@ -10,7 +10,8 @@ const venv = {
   PORT: process.env.PORT || 8080,
   SESSION_COOKIE_TIMEOUT_MIN: process.env.SESSION_COOKIE_TIMEOUT_MIN || 30,
 
-  TOKEN_SECRET_KEY: process.env.TOKEN_SECRET_KEY || 'secret',
+  JWT_SECRET_KEY: process.env.TOKEN_SECRET_KEY || 'secret',
+  TOKEN_KEEP_ALIVE: process.env.TOKEN_KEEP_ALIVE || '10m',
 
   MONGO_ATLAS_USER: process.env.MONGO_ATLAS_USER || 'user',
   MONGO_ATLAS_PASSWORD: process.env.MONGO_ATLAS_PASSWORD || 'pwd',
