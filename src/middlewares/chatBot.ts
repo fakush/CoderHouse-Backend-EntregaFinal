@@ -3,9 +3,10 @@ import { orderAPI } from '../apis/ordersAPI';
 import { cartAPI } from '../apis/cartsAPI';
 import { ProductObject } from '../models/products/products.interface';
 import moment from 'moment';
+import { Logger } from '../utils/logger';
 
-export const chatBot = (userId: string, chabotMessage: any) => {
-  const message = chabotMessage.message;
+export const chatBot = async (userId: string, chabotMessage: any) => {
+  const message = chabotMessage.message.toString().toLowerCase();
 
   let newMessage = {
     UserId: userId,
@@ -14,7 +15,7 @@ export const chatBot = (userId: string, chabotMessage: any) => {
     date: moment().format('DD/MM/YYYY HH:mm:ss')
   };
 
-  const getStock = async () => {
+  if (message.toLowerCase().includes('stock')) {
     const products = productsAPI.getProducts();
     const stock = (await products).map((product: ProductObject) => {
       product.name, product.stock;
@@ -23,14 +24,14 @@ export const chatBot = (userId: string, chabotMessage: any) => {
     return newMessage;
   };
 
-  const getLastOrder = async () => {
+  if (message.toLowerCase().includes('order')) {
     const orders = orderAPI.getOrders(userId);
     const lastOrder = (await orders).pop();
     newMessage.message = `Ultima orden: ${JSON.stringify(lastOrder)}`;
     return newMessage;
   };
 
-  const getCart = async () => {
+  if (message.toLowerCase().includes('cart')) {
     const cart = await cartAPI.getCart(userId);
     newMessage.message = `Carrito: ${JSON.stringify(cart)}`;
     return newMessage;
@@ -47,16 +48,5 @@ export const chatBot = (userId: string, chabotMessage: any) => {
     return newMessage;
   };
 
-  switch (message) {
-    case message.toLowerCase().includes('stock'):
-      return getStock();
-    case message.toLowerCase().includes('order'):
-      return getLastOrder();
-    case message.toLowerCase().includes('cart'):
-      return getCart();
-    case message.toLowerCase().includes('help'):
-      return getDefaultMessage();
-    default:
-      return getDefaultMessage();
-  }
+  return await getDefaultMessage();
 };

@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+import { Logger } from '../../../utils/logger';
 import { ChatBaseClass, chatObject } from '../chat.interfaces';
+import { MongoDB } from '../../../services/mongodb';
 
 //MongoSchema
 const dbCollection = 'chatLogs';
@@ -16,7 +18,9 @@ export class PersistenciaMongo implements ChatBaseClass {
   private chatLog;
 
   constructor() {
-    this.chatLog = messageModel;
+    const mongo = new MongoDB();
+    const server = mongo.getConnection();
+    this.chatLog = server.model<chatObject>(dbCollection, messageSchema);
   }
 
   async getChatLog(userId: string): Promise<chatObject[]> {
@@ -26,6 +30,7 @@ export class PersistenciaMongo implements ChatBaseClass {
   }
 
   async addChatMessage(userId: string, type: string, message: string, timestamp: string): Promise<chatObject> {
+    // Logger.debug(`Mensaje recibido: ${JSON.stringify({ userId, type, message, timestamp })}`);
     const chatLog = new this.chatLog({
       userId,
       type,

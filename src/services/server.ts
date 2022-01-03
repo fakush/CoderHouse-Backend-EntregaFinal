@@ -1,16 +1,17 @@
-import express, { Request, Response, ErrorRequestHandler } from 'express';
-import Config from '../config';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import MongoStore from 'connect-mongo';
-import session from 'express-session';
+import express, { Request, ErrorRequestHandler } from 'express';
 import * as http from 'http';
-import routersIndex from '../routes/index';
+import handlebars from 'express-handlebars';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import compression from 'compression';
-import { Logger } from '../utils/logger';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import Config from '../config';
 import { mongoURL } from './mongodb';
+import { Logger } from '../utils/logger';
+import routersIndex from '../routes/index';
+import { hbsOptions } from '../utils/hbsOptions';
 
 const app = express();
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
@@ -34,61 +35,41 @@ app.use(errorHandler);
 // Setea el uso de compresion.
 app.use(compression());
 
-//? Seteo bodyParser?
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// Setea el uso de helmet.
-// app.use(helmet());
-
 // Express & Handlebars Setup
 app.use(express.static(publicFolderPath));
 app.use(express.static(uploadsFolderPath));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.set('view engine', 'hbs');
-// app.engine(
-//   'hbs',
-//   handlebars({
-//     layoutsDir: layoutDirPath,
-//     extname: 'hbs',
-//     defaultLayout: defaultLayerPth,
-//     partialsDir: partialDirPath
-//   })
-// );
+app.set('view engine', 'hbs');
+app.engine(
+  'hbs',
+  handlebars({ layoutsDir: layoutDirPath, extname: 'hbs', defaultLayout: defaultLayerPth, partialsDir: partialDirPath })
+);
 
 //Login
 const unMinuto = 1000 * 60;
 
-const StoreOptions = {
-  store: MongoStore.create({
-    mongoUrl: mongoURL,
-    dbName: 'kwikemartonline-users',
-    stringify: false,
-    autoRemove: 'interval',
-    autoRemoveInterval: 1
-  }),
-  secret: 'APU_S3CR3T_K3Y',
-  resave: false,
-  saveUninitialized: false,
-  rolling: true,
-  cookie: { maxAge: Number(Config.SESSION_COOKIE_TIMEOUT_MIN) * 60 * 1000 }
-};
+// const StoreOptions = {
+//   store: MongoStore.create({
+//     mongoUrl: mongoURL,
+//     dbName: 'kwikemartonline-users',
+//     stringify: false,
+//     autoRemove: 'interval',
+//     autoRemoveInterval: 1
+//   }),
+//   secret: 'APU_S3CR3T_K3Y',
+//   resave: false,
+//   saveUninitialized: false,
+//   rolling: true,
+//   cookie: { maxAge: Number(Config.SESSION_COOKIE_TIMEOUT_MIN) * 60 * 1000 }
+// };
 
-app.use(cookieParser());
-app.use(session(StoreOptions));
-
-// Test para ver si funciona el logeo de usuarios
-// TODO: Eliminar despues de que se haya probado
-// app.use((req, res, next) => {
-//   console.log(`REQ.SESSION =>\n${JSON.stringify(req.session)}`.yellow);
-//   console.log(`REQ.USER =>\n${JSON.stringify(req.user)}`.yellow);
-//   next();
-// });
+// app.use(cookieParser());
+// app.use(session(StoreOptions));
 
 // Main Page
 app.get('/', (req: Request, res) => {
-  res.render('main');
+  res.render('main', hbsOptions);
 });
 
 // Use routers
@@ -114,7 +95,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:8080',
+        url: `http://localhost:${Config.PORT}`,
         description: 'Development server'
       }
     ]

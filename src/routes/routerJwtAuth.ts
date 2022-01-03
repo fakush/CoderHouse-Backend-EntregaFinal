@@ -72,31 +72,6 @@ router.get('/secure-data', authController.checkUserAuth, (req, res) => {
   res.json({ msg: 'Llegaste a la data segura' });
 });
 
-/**
- * @swagger
- * /api/user/logout:
- *   post:
- *     summary: Logout de usuario
- *     tags:
- *       - Authentication
- *     responses:
- *       200:
- *         description: User logged out successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  message:
- *                   type: string
- *                   description: Mensaje de exito
- *                   example: "User logged out successfully"
- */
-router.post('/logout', (req: any, res) => {
-  req.session.destroy;
-  res.status(200).json({ msg: 'User logged out successfully' });
-});
-
 export default router;
 
 /**
