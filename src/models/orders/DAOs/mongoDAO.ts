@@ -6,7 +6,7 @@ import { Logger } from '../../../utils/logger';
 //MongoSchema
 const orderSchema = new mongoose.Schema<OrderObject>({
   userId: { type: Schema.Types.ObjectId, required: true },
-  products: [{ _id: Schema.Types.ObjectId, amount: Number }],
+  products: [{ _id: Schema.Types.ObjectId, amount: Number, price: Number }],
   status: { type: String, required: true },
   timestamp: { type: String, required: true },
   orderTotal: { type: Number, required: true }
@@ -48,6 +48,8 @@ export class PersistenciaMongo implements OrderBaseClass {
     timestamp: string,
     orderTotal: number
   ): Promise<OrderObject> {
+    Logger.info('Creating order');
+    Logger.info(JSON.stringify(products));
     const newOrder = new this.orders({ userId, products, status, timestamp, orderTotal });
     await newOrder.save();
     return newOrder;

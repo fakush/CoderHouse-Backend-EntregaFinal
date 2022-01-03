@@ -38,7 +38,7 @@ router.get('/', authController.checkUserAuth, asyncHandler(ordersController.getO
 
 /**
  * @swagger
- * /api/orders/:id:
+ * /api/orders/{orderId}:
  *   get:
  *     summary: Returns a order
  *     tags:
@@ -49,6 +49,12 @@ router.get('/', authController.checkUserAuth, asyncHandler(ordersController.getO
  *         required: true
  *         schema:
  *           $ref: '#/components/schemas/x-auth-token'
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 61d332887aca803a53f9fb99
  *     responses:
  *       200:
  *         description: get order data
@@ -67,7 +73,7 @@ router.get('/:orderId', authController.checkUserAuth, asyncHandler(ordersControl
 
 /**
  * @swagger
- * /api/orders/complete/:id:
+ * /api/orders/complete:
  *   post:
  *     summary: Sets order as complete
  *     tags:
@@ -78,6 +84,16 @@ router.get('/:orderId', authController.checkUserAuth, asyncHandler(ordersControl
  *         required: true
  *         schema:
  *           $ref: '#/components/schemas/x-auth-token'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               orderId:
+ *                type: string
+ *                example: 61d332887aca803a53f9fb99
  *     responses:
  *       200:
  *         description: set order as complete
@@ -103,15 +119,15 @@ export default router;
  *     ordersData:
  *       type: object
  *       properties:
- *          OrderId:
+ *          _id:
  *           type: string
  *           description: Order ID
- *           example: 12345
+ *           example: 61d332887aca803a53f9fb99
  *          UserId:
  *            type: string
  *            description: User ID
- *            example: 12345
- *          Items:
+ *            example: 61d332887aca803a53f9fb99
+ *          products:
  *           type: array
  *           description: Array of products, quantities and prices
  *           example: [{ProductId: 12345, Quantity: 1, Price: 10.00}, {ProductId: 12345, Quantity: 1, Price: 10.00}]
@@ -122,7 +138,7 @@ export default router;
  *          status:
  *            type: string
  *            description: Status of order
- *            example: complete
+ *            example: Delivered
  *          orderTotal:
  *            type: number
  *            description: Total price of order

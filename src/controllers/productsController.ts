@@ -47,6 +47,7 @@ class Product {
   }
 
   async checkAndUpdateStock(req: Request, res: Response, next: NextFunction) {
+    try {
     const { product, amount } = req.body;
     if (typeof Number(amount) !== 'number') {
       return res.status(400).json({
@@ -63,6 +64,9 @@ class Product {
     Logger.info(`${dbProduct[0].name} stock updated`);
     await productsAPI.updateProduct(product, { stock: dbProduct[0].stock - Number(amount) });
     next();
+    } catch (error: any) {
+      res.status(400).json({ msg: error.message });
+    }
   }
 
   async checkValidCategory(req: Request, res: Response, next: NextFunction) {

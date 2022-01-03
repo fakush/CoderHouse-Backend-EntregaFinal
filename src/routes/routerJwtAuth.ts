@@ -12,12 +12,12 @@ const router = Router();
  *     summary: Login de usuario
  *     tags:
  *       - Authentication
- *     parameters:
- *       - in: body
- *         name: loginData
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/loginData'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/loginData'
  *     responses:
  *       200:
  *         description: User logged in successfully
@@ -41,12 +41,12 @@ router.post('/login', authController.checkValidUserAndPassword, asyncHandler(aut
  *     summary: Registra un nuevo usuario
  *     tags:
  *       - Authentication
- *     parameters:
- *       - in: body
- *         name: signupData
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/signupData'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/signupData'
  *     responses:
  *       200:
  *         description: User signed up successfully
@@ -99,7 +99,7 @@ export default router;
  *         token:
  *           type: string
  *           description: JSON Web Token
- *           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+ *           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWI2OTM2MjI0NTRlOWUxZmY4ZTg4ZDciLCJ1c2VyTmFtZSI6IkFwdThraWRzIiwiZW1haWwiOiJhcHVAa3dpa2VtYXJ0LmNvbSIsImFkbWluIjp0cnVlLCJpYXQiOjE2NDEyMzU4NDQsImV4cCI6MjI3MjM4Nzg0NH0.j8TUEzUxvhHmVF35sJRdVxs-Oa7z2qNVs52ax8FylNI
  *     signedData:
  *       type: object
  *       properties:
@@ -107,10 +107,12 @@ export default router;
  *           type: string
  *           description: Message
  *           example: signup OK
+ *         user:
+ *           $ref: '#/components/schemas/signupData'
  *         token:
  *           type: string
  *           description: JSON Web Token
- *           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+ *           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWI2OTM2MjI0NTRlOWUxZmY4ZTg4ZDciLCJ1c2VyTmFtZSI6IkFwdThraWRzIiwiZW1haWwiOiJhcHVAa3dpa2VtYXJ0LmNvbSIsImFkbWluIjp0cnVlLCJpYXQiOjE2NDEyMzU4NDQsImV4cCI6MjI3MjM4Nzg0NH0.j8TUEzUxvhHmVF35sJRdVxs-Oa7z2qNVs52ax8FylNI
  *     signupData:
  *       type: object
  *       properties:
@@ -125,11 +127,11 @@ export default router;
  *         password:
  *           type: string
  *           description: Password
- *           example: ArmandoBarredaRules
+ *           example: ArmandoBarreda4Ever
  *         passwordConfirm:
  *           type: string
  *           description: Password Confirmation
- *           example: ArmandoBarredaRules
+ *           example: ArmandoBarreda4Ever
  *         firstName:
  *           type: string
  *           description: First Name

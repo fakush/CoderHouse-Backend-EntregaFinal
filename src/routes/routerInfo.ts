@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { allArguments } from '../config/arguments';
+import Config from '../config';
 import os from 'os';
 
 const router = Router();
@@ -29,6 +30,7 @@ router.get('/', async (req, res) => {
     'Carpeta corriente': process.execPath,
     'Carpeta de trabajo': process.execPath,
     'Path de ejecución': process.cwd(),
+    'Puerto de escucha': Config.PORT,
     'Nombre del usuario': os.userInfo().username,
     'Nombre de la plataforma': process.platform,
     'Nombre del sistema operativo': os.platform(),

@@ -79,18 +79,18 @@ router.get('/', asyncHandler(productsController.getProducts as any));
 
 /**
  * @swagger
- * /api/products/:category:
+ * /api/products/{category}:
  *   get:
  *     summary: Returns all products by category
  *     tags:
  *       - Products
  *     parameters:
  *       - in: path
- *         id: category
+ *         name: category
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: category of the product
+ *           example: Bebidas
  *     responses:
  *       200:
  *         description: get product data
@@ -159,7 +159,7 @@ router.post(
 
 /**
  * @swagger
- * /api/products/:id:
+ * /api/products/{id}:
  *   patch:
  *     summary: Updates a product
  *     tags:
@@ -170,6 +170,12 @@ router.post(
  *         required: true
  *         schema:
  *           $ref: '#/components/schemas/x-auth-token'
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 61b6871a6238063410299fc5
  *     requestBody:
  *       required: true
  *       content:
@@ -204,7 +210,7 @@ router.patch(
 
 /**
  * @swagger
- * /api/products/:id:
+ * /api/products/{id}:
  *   delete:
  *     summary: Deletes a product
  *     tags:
@@ -217,22 +223,23 @@ router.patch(
  *           $ref: '#/components/schemas/x-auth-token'
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: ID del producto
+ *           example: 61b6871a6238063410299fd5
  *     responses:
  *       200:
- *         description: Devuelve la lista de productos actualizada
+ *         description: Returns confirmation message
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items :
- *                  msg: 'borrando productos'
- *                  $ref: '#/components/schemas/ProductData'
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                  type: string
+ *                  example: 'Product deleted'
  *       400:
- *         description: "Falta el id del producto"
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:

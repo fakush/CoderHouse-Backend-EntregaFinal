@@ -5,7 +5,7 @@ const PASS_RE = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 const addressJoiSchema = Joi.object({
   street: Joi.string().min(5).max(50).required(),
   number: Joi.number().integer().min(1).max(9999).required(),
-  floor: Joi.number().integer().min(1).max(99),
+  floor: Joi.number().integer().min(0).max(99),
   apartment: Joi.string().min(1).max(3),
   postalCode: Joi.string().min(4).max(10).required(),
   city: Joi.string().min(5).max(50).required(),

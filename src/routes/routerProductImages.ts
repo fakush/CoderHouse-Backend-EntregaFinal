@@ -4,43 +4,24 @@ import { imageController } from '../controllers/imageController';
 import { imageMiddleware } from '../middlewares/imageMiddleware';
 import { authController } from '../controllers/authController';
 import { isAdmin } from '../middlewares/isAdmin';
-import multer from 'multer';
 import asyncHandler from 'express-async-handler';
 
 const router = Router();
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, process.cwd() + '/assets/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 1024 * 1024 * 5 }, //! limite 5MB
-  fileFilter: (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      return cb(new Error('Please upload an image'));
-    }
-    cb(undefined, true);
-  }
-});
 
 /**
  * @swagger
- * /api/images/:id:
+ * /api/images/{id}:
  *   get:
  *     summary: Returns an array of images
  *     tags:
  *       - Images
  *     parameters:
  *       - in: path
- *         id: Product ID
+ *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: Id of the product
+ *           example: 61b6871a6238063410299fc5
  *     responses:
  *       200:
  *         description: Returns array of images
@@ -62,11 +43,13 @@ router.get('/:id', productsController.checkValidId, asyncHandler(imageController
 
 /**
  * @swagger
- * /api/images/upload/:id:
+ * /api/images/upload/{id}:
  *   post:
  *     summary: Returns an array of images
  *     tags:
  *       - Images
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
  *       - in: header
  *         name: x-auth-token
@@ -74,16 +57,20 @@ router.get('/:id', productsController.checkValidId, asyncHandler(imageController
  *         schema:
  *           $ref: '#/components/schemas/x-auth-token'
  *       - in: path
- *         id: Product ID
+ *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *           required: true
- *           description: Id of the product
- *           example: 61b6871a6238063410299fc6
- *       - in: body
- *         name: file
- *         schema:
- *           $ref: '#/components/schemas/NewImageInput'
+ *           example: 61b6871a6238063410299fc5
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Returns array of images
@@ -115,7 +102,7 @@ router.post(
   authController.checkUserAuth,
   isAdmin,
   productsController.checkValidId,
-  upload.single('file'),
+  imageMiddleware.upload.single('file'),
   asyncHandler(imageMiddleware.uploadImage as any),
   asyncHandler(imageController.uploadImage as any)
 );
@@ -134,20 +121,21 @@ router.post(
  *         schema:
  *           $ref: '#/components/schemas/x-auth-token'
  *       - in: path
- *         id: Product ID
+ *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: Id of the product
- *       - in: body
- *         name: image
- *         schema:
- *           type: object
- *           properties:
- *             image:
- *               type: string
- *               description: Image url
- *               example: https://res.cloudinary.com/caffeine-apps/image/upload/v1639966361/tefktngz6x5rdm6m4kui.jpg
+ *           example: 61b6871a6238063410299fc5
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                type: string
+ *                example: https://res.cloudinary.com/caffeine-apps/image/upload/v1641240321/kujkgvuvpk31pv8xhqth.jpg
  *     responses:
  *       200:
  *         description: Returns Message
@@ -217,5 +205,5 @@ export default router;
  *         type: string
  *         required: true
  *         description: JWT Bearer token
- *         example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWQwODMxNDE4ZjAxZDRlOWExMDE5MTIiLCJ1c2VyTmFtZSI6Ik1yQnVybnMiLCJlbWFpbCI6ImJ1cm5zQHNwcmluZ2ZpZWxkLmNvbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjQxMDYzNDYyLCJleHAiOjE2NDEwNzA2NjJ9.SzXkleGE1qkqLCeKRrAowGI2ZCaHX_IhCdToWyHOibc"
+ *         example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWI2OTM2MjI0NTRlOWUxZmY4ZTg4ZDciLCJ1c2VyTmFtZSI6IkFwdThraWRzIiwiZW1haWwiOiJhcHVAa3dpa2VtYXJ0LmNvbSIsImFkbWluIjp0cnVlLCJpYXQiOjE2NDEyMzU4NDQsImV4cCI6MjI3MjM4Nzg0NH0.j8TUEzUxvhHmVF35sJRdVxs-Oa7z2qNVs52ax8FylNI"
  */

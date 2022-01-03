@@ -26,7 +26,9 @@ class Orders {
 
   async getOrdersbyId(req: Request, res: Response) {
     try {
+      Logger.debug(req.params);
       const orderId = req.params.orderId;
+      Logger.debug(`Getting order ${orderId}`);
       const order = await orderAPI.getOrderById(orderId);
       if (!order) res.status(400).json({ msg: `Order not found` });
       const user: UserObject = req.user as UserObject;
@@ -43,7 +45,7 @@ class Orders {
     try {
       const user: UserObject = req.user as UserObject;
       const userId = user._id;
-      const orderId = req.body._id;
+      const orderId = req.body.orderId;
       const order = await orderAPI.getOrderById(orderId);
       Logger.debug(`Completing order ${orderId}`);
       if (!order) return res.status(400).json({ msg: `Order not found` });

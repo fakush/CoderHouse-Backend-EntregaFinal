@@ -20,7 +20,7 @@ const router = Router();
  *         schema:
  *           $ref: '#/components/schemas/x-auth-token'
  *     responses:
- *       200:
+ *       201:
  *         description: get cart by userId
  *         content:
  *           application/json:
@@ -57,7 +57,7 @@ router.get('/', authController.checkUserAuth, asyncHandler(cartController.getCar
  *           schema:
  *             $ref: '#/components/schemas/NewCartInput'
  *     responses:
- *       200:
+ *       201:
  *         description: Devuelve el carrito con el producto ingresado
  *         content:
  *           application/json:
@@ -101,7 +101,7 @@ router.post(
  *           schema:
  *             $ref: '#/components/schemas/NewCartInput'
  *     responses:
- *       200:
+ *       201:
  *         description: Devuelve el carrito con el producto ingresado
  *         content:
  *           application/json:
@@ -137,22 +137,13 @@ router.post(
  *         required: true
  *         schema:
  *           $ref: '#/components/schemas/x-auth-token'
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/NewCartInput'
  *     responses:
- *       200:
- *         description: Devuelve el carrito con el producto ingresado
+ *       201:
+ *         description: Devuelve la orden de compra creada
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items :
- *                  msg: 'creando productos'
- *                  $ref: '#/components/schemas/CartData'
+ *               $ref: '#/components/schemas/ordersData'
  *       400:
  *         description: Bad request
  *         content:
@@ -209,9 +200,9 @@ export default router;
  *         product:
  *           type: String
  *           description: ID del producto
- *           example: "614dfd26ea29ad3f194bad80"
+ *           example: "61b6871a6238063410299fc6"
  *         amount:
  *           type: Number
  *           description: Cantidad de productos
- *           example: 1
+ *           example: 5
  */
