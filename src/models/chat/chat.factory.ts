@@ -1,5 +1,5 @@
 // import { PersistenciaSQLite3 } from './DAOS/sqlite3DAO';
-import { PersistenciaMongo } from './DAOS/mongoDAO';
+import { PersistenciaMongo } from './DAOs/mongoDAO';
 import { Logger } from '../../utils/logger';
 
 export enum Persistencia {
