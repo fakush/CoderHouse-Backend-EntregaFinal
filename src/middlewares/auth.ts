@@ -1,7 +1,7 @@
 import Config from '../config';
 import { Request, Response, NextFunction } from 'express';
 import { UserObject } from '../models/users/users.interface';
-import { authAPI } from '../apis/authAPI';
+import { authAPI } from '../apis/authapi';
 import { Logger } from '../utils/logger';
 
 const jwt = require('jsonwebtoken');

@@ -1,7 +1,7 @@
 import { CartObject } from '../models/carts/carts.interface';
 import { CartFactory, Persistencia } from '../models/carts/carts.factory';
 import { Logger } from '../utils/logger';
-import { authAPI } from './authAPI';
+import { authAPI } from './authapi';
 
 const tipo = Persistencia.Mongo;
 

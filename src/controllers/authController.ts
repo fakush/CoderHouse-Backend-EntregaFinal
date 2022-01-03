@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { userJoiSchema, UserObject } from '../models/users/users.interface';
 import { generateAuthToken, checkAuth } from '../middlewares/auth';
-import { authAPI } from '../apis/authAPI';
+import { authAPI } from '../apis/authapi';
 import { Logger } from '../utils/logger';
 
 interface RequestUser extends Request {
