@@ -32,18 +32,18 @@ class ImageMiddleware {
       cb(undefined, true);
     }
   });
-  
+
   async uploadImage(req: Request, res: Response, next: NextFunction) {
     try {
-    const data = { image: req.file.path };
-    Logger.debug(`Uploading image ${data.image}`);
-    if (!data.image) return res.status(400).json({ msg: 'missing image' });
-    await cloudinary.v2.uploader.upload(data.image, (err: any, result: any) => {
-      if (err) return res.status(400).json({ msg: 'error uploading image', err });
-      req.body.image = result.secure_url;
-      req.body.cloudinary_result = result;
-      next();
-    });
+      const data = { image: req.file.path };
+      Logger.debug(`Uploading image ${data.image}`);
+      if (!data.image) return res.status(400).json({ msg: 'missing image' });
+      await cloudinary.v2.uploader.upload(data.image, (err: any, result: any) => {
+        if (err) return res.status(400).json({ msg: 'error uploading image', err });
+        req.body.image = result.secure_url;
+        req.body.cloudinary_result = result;
+        next();
+      });
     } catch (err: any) {
       Logger.error(err);
       return res.status(400).json({ msg: 'error uploading image', err });
@@ -53,12 +53,12 @@ class ImageMiddleware {
   async deleteImage(req: Request, res: Response, next: NextFunction) {
     Logger.debug(`Deleting image ${req.body.image}`);
     try {
-    const data = { image: req.body.image };
-    if (!data.image) return res.status(400).json({ msg: 'missing image name' });
-    await cloudinary.v2.uploader.destroy(data.image, (err: any, result: any) => {
-      if (err) return res.status(400).json({ msg: 'error deleting image' });
-    });
-    next();
+      const data = { image: req.body.image };
+      if (!data.image) return res.status(400).json({ msg: 'missing image name' });
+      await cloudinary.v2.uploader.destroy(data.image, (err: any, result: any) => {
+        if (err) return res.status(400).json({ msg: 'error deleting image' });
+      });
+      next();
     } catch (err: any) {
       Logger.error(err);
       return res.status(400).json({ msg: 'error deleting image', err });

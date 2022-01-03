@@ -46,7 +46,9 @@ const initWsServer = (server: any) => {
           socket.emit('chatLog', [response]);
         } catch (err: any) {
           Logger.error(err.message);
-          socket.emit('chatLog', [{ from: 'System', message: 'Sorry, we have a problem with chat. Reload and try again.' }]);
+          socket.emit('chatLog', [
+            { from: 'System', message: 'Sorry, we have a problem with chat. Reload and try again.' }
+          ]);
         }
       }
     });

@@ -48,22 +48,22 @@ class Product {
 
   async checkAndUpdateStock(req: Request, res: Response, next: NextFunction) {
     try {
-    const { product, amount } = req.body;
-    if (typeof Number(amount) !== 'number') {
-      return res.status(400).json({
-        msg: 'invalid amount'
-      });
-    }
-    const dbProduct = await productsAPI.getProducts(product);
-    if (dbProduct[0].stock < amount) {
-      return res.status(400).json({
-        msg: 'not enough stock'
-      });
-    }
-    Logger.debug(`Updating stock for product ${product} with amount ${amount}`);
-    Logger.info(`${dbProduct[0].name} stock updated`);
-    await productsAPI.updateProduct(product, { stock: dbProduct[0].stock - Number(amount) });
-    next();
+      const { product, amount } = req.body;
+      if (typeof Number(amount) !== 'number') {
+        return res.status(400).json({
+          msg: 'invalid amount'
+        });
+      }
+      const dbProduct = await productsAPI.getProducts(product);
+      if (dbProduct[0].stock < amount) {
+        return res.status(400).json({
+          msg: 'not enough stock'
+        });
+      }
+      Logger.debug(`Updating stock for product ${product} with amount ${amount}`);
+      Logger.info(`${dbProduct[0].name} stock updated`);
+      await productsAPI.updateProduct(product, { stock: dbProduct[0].stock - Number(amount) });
+      next();
     } catch (error: any) {
       res.status(400).json({ msg: error.message });
     }

