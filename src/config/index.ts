@@ -8,8 +8,7 @@ const venv = {
   NODE_ENV: process.env.NODE_ENV || 'development',
 
   PORT: process.env.PORT || 8080,
-  SESSION_COOKIE_TIMEOUT_MIN: process.env.SESSION_COOKIE_TIMEOUT_MIN || 30,
-
+  
   JWT_SECRET_KEY: process.env.TOKEN_SECRET_KEY || 'secret',
   TOKEN_KEEP_ALIVE: process.env.TOKEN_KEEP_ALIVE || '10m',
 
