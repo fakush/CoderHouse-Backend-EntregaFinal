@@ -3,10 +3,11 @@ import { Request, Response, NextFunction } from 'express';
 import Config from '../config';
 import { Logger } from '../utils/logger';
 import multer from 'multer';
+import path from 'path';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, process.cwd() + '/assets/images');
+    cb(null, path.join(__dirname, '../../assets/images'));
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
