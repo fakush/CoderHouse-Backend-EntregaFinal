@@ -26,11 +26,11 @@ class ImageMiddleware {
   upload = multer({
     storage: storage,
     limits: { fileSize: 1024 * 1024 * 5 }, //! limite 5MB
-    fileFilter: (req, file, cb) => {
+    fileFilter: async (req, file, cb) => {
       if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
         return cb(new Error('Please upload an image'));
       }
-      cb(undefined, true);
+      await cb(undefined, true);
     }
   });
 
