@@ -55,13 +55,15 @@ class Product {
         });
       }
       const dbProduct = await productsAPI.getProducts(product);
+      if (dbProduct.length < 1) {
+        return res.status(404).json({ msg: 'product not found' });
+      }
       if (dbProduct[0].stock < amount) {
         return res.status(400).json({
           msg: 'not enough stock'
         });
       }
       Logger.debug(`Updating stock for product ${product} with amount ${amount}`);
-      Logger.info(`${dbProduct[0].name} stock updated`);
       await productsAPI.updateProduct(product, { stock: dbProduct[0].stock - Number(amount) });
       next();
     } catch (error: any) {

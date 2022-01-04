@@ -12,8 +12,6 @@ const messageSchema = new mongoose.Schema({
   timestamp: { type: String, required: true }
 });
 
-export const messageModel = mongoose.model(dbCollection, messageSchema);
-
 export class PersistenciaMongo implements ChatBaseClass {
   private chatLog;
 
@@ -23,14 +21,19 @@ export class PersistenciaMongo implements ChatBaseClass {
     this.chatLog = server.model<chatObject>(dbCollection, messageSchema);
   }
 
-  async getChatLog(userId: string): Promise<chatObject[]> {
-    const chatLog = await this.chatLog.find({ userId });
-    if (!chatLog) throw new Error('No se encontraron mensajes');
-    return chatLog;
+  // Exportar el modelo para usarlo en tests
+  model(): any {
+    return this.chatLog;
   }
 
+  async getChatLog(userId: string): Promise<chatObject[]> {
+    const chatLog = await this.chatLog.find({ userId });
+    // No tiro error porque puede que no haya nada.
+    if (!chatLog) Logger.warn('No se encontraron mensajes para el usuario, userId: ' + userId);
+    return chatLog;
+  }
+  
   async addChatMessage(userId: string, type: string, message: string, timestamp: string): Promise<chatObject> {
-    // Logger.debug(`Mensaje recibido: ${JSON.stringify({ userId, type, message, timestamp })}`);
     const chatLog = new this.chatLog({
       userId,
       type,

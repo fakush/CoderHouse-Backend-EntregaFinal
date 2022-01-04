@@ -1,9 +1,9 @@
+import { PersistenceArgument } from '../config/arguments';
 import { OrderObject } from '../models/orders/orders.interface';
 import { OrderFactory, Persistencia } from '../models/orders/orders.factory';
 import { cartAPI } from './cartsAPI';
 import { productsAPI } from './productsAPI';
 import { Logger } from '../utils/logger';
-import { PersistenceArgument } from '../config/arguments';
 
 //Si hay un argumento de persistencia, lo uso, sino, uso el default.
 const tipo = PersistenceArgument || Persistencia.Mongo;

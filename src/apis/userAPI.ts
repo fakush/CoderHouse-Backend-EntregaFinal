@@ -1,9 +1,9 @@
+import { PersistenceArgument } from '../config/arguments';
 import { newUserObject, UserObject, UserQuery } from '../models/users/users.interface';
 import { UsersFactory, Persistencia } from '../models/users/users.factory';
-import { Logger } from '../utils/logger';
 import { cartAPI } from './cartsAPI';
 
-const tipo = Persistencia.Mongo;
+const tipo = PersistenceArgument || Persistencia.Mongo;
 
 class authAPIClass {
   private auth;
@@ -20,6 +20,8 @@ class authAPIClass {
     const query = { $or: [] as UserQuery[] };
     if (username) query.$or.push({ username });
     if (email) query.$or.push({ email });
+    const response = await this.auth.query(query);
+    if (!response) throw new Error('Login Failed: user/password incorrect');
     return this.auth.query(query);
   }
 

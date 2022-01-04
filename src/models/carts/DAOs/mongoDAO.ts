@@ -1,8 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { CartObject, CartBaseClass, ProductObject } from '../carts.interface';
 import { MongoDB } from '../../../services/mongodb';
-import { Logger } from '../../../utils/logger';
-import { date } from 'joi';
 
 //MongoSchema
 const cartSchema = new mongoose.Schema<CartObject>({

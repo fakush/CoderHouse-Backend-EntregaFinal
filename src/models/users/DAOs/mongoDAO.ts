@@ -60,12 +60,14 @@ export class PersistenciaMongo implements UserBaseClass {
 
   async findUser(userId: string): Promise<UserObject> {
     const user = await this.users.findById(userId);
+    if (!user) throw new Error('User not found');
     return user;
   }
 
   async login(data: newUserObject): Promise<UserObject> {
     const finder = data.username;
     const user = await this.users.findOne({ finder });
+    if (!user) throw new Error('User not found');
     return user;
   }
 

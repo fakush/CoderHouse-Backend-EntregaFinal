@@ -1,7 +1,8 @@
+import { PersistenceArgument } from '../config/arguments';
 import { ChatFactory, Persistencia } from '../models/chat/chat.factory';
 import { chatObject } from '../models/chat/chat.interfaces';
 
-const tipo = Persistencia.Mongo;
+const tipo = PersistenceArgument || Persistencia.Mongo;
 
 class chatApiClass {
   private chatLog;
@@ -12,7 +13,6 @@ class chatApiClass {
 
   async getChatLog(userId: string): Promise<chatObject[]> {
     const chatLog = await this.chatLog.getChatLog(userId);
-    if (!chatLog) throw new Error('No se encontraron mensajes');
     return chatLog;
   }
 

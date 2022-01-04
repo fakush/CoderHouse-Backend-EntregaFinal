@@ -15,17 +15,21 @@ class authMiddleware {
       return res.status(400).json({ msg: 'Incomplete or No data received' });
     }
     let { username, email, password } = req.body;
-    const user = await authAPI.query(username, email);
-    if (!user) {
-      Logger.info('User: ' + user.username + ' invalid.');
-      return res.status(401).json({ msg: 'Invalid Username/Password' });
+    try {
+      const user = await authAPI.query(username, email);
+      if (!user) {
+        Logger.info('User: ' + user.username + ' invalid.');
+        return res.status(401).json({ msg: 'Invalid Username/Password' });
+      }
+      const validPassword = await authAPI.ValidatePassword(user.password, password);
+      if (!validPassword) {
+        Logger.info('User: ' + user.username + ' failed to login with valid password.');
+        return res.status(401).json({ msg: 'Invalid Username/Password' });
+      }
+      next();
+    } catch (err: any) {
+      return res.status(400).json({ msg: err.message });
     }
-    const validPassword = await authAPI.ValidatePassword(user.password, password);
-    if (!validPassword) {
-      Logger.info('User: ' + user.username + ' failed to login with valid password.');
-      return res.status(401).json({ msg: 'Invalid Username/Password' });
-    }
-    next();
   }
 
   async checkExistingUser(req: Request, res: Response, next: NextFunction) {

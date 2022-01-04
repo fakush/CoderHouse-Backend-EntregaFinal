@@ -1,7 +1,8 @@
+import { PersistenceArgument } from '../config/arguments';
 import { newProductObject, ProductObject, ProductQuery } from '../models/products/products.interface';
 import { ProductsFactory, Persistencia } from '../models/products/products.factory';
 
-const tipo = Persistencia.Mongo;
+const tipo = PersistenceArgument || Persistencia.Mongo;
 
 class prodAPI {
   private productos;
@@ -11,8 +12,8 @@ class prodAPI {
   }
 
   async getProducts(id: string | undefined = undefined): Promise<ProductObject[]> {
-    if (id) return this.productos!.get(id);
-    else return this.productos!.get();
+    if (id) return this.productos.get(id);
+    else return this.productos.get();
   }
 
   async getProductsByCategory(category: string) {

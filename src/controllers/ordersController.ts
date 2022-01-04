@@ -1,17 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { UserObject } from '../models/users/users.interface';
 import { orderAPI } from '../apis/ordersAPI';
 import { EmailService } from '../services/mailer';
 import { Logger } from '../utils/logger';
 
 class Orders {
-  async lookForId(req: Request, res: Response, next: NextFunction) {
-    // Si el id no existe, se manda un error 404
-    const id = req.params.id;
-    if (!id) return res.status(400).json({ msg: 'missing parameters' });
-    next();
-  }
-
   async getOrders(req: Request, res: Response) {
     try {
       const user: UserObject = req.user as UserObject;

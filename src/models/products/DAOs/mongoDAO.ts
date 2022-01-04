@@ -78,8 +78,8 @@ export class PersistenciaMongo implements ProductBaseClass {
         if (item) output.push(item);
       } else output = await this.products.find();
       return output;
-    } catch (err) {
-      return output;
+    } catch (err: any) {
+      throw new Error(err.message);
     }
   }
 
