@@ -23,6 +23,11 @@ export class PersistenciaMongo implements OrderBaseClass {
     this.orders = server.model<OrderObject>(dbCollection, orderSchema);
   }
 
+  // Exportar el modelo para usarlo en tests
+  model(): any {
+    return this.orders;
+  }
+
   async find(id: string): Promise<Boolean> {
     const item: any = await this.orders.findOne({ id });
     if (item == 0) return false;

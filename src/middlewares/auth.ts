@@ -1,5 +1,4 @@
 import Config from '../config';
-import { Request, Response, NextFunction } from 'express';
 import { UserObject } from '../models/users/users.interface';
 import { authAPI } from '../apis/userAPI';
 import { Logger } from '../utils/logger';

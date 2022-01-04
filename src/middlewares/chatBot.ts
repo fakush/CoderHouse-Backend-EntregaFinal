@@ -3,7 +3,6 @@ import { orderAPI } from '../apis/ordersAPI';
 import { cartAPI } from '../apis/cartsAPI';
 import { ProductObject } from '../models/products/products.interface';
 import moment from 'moment';
-import { Logger } from '../utils/logger';
 
 export const chatBot = async (userId: string, chabotMessage: any) => {
   const message = chabotMessage.message.toString().toLowerCase();

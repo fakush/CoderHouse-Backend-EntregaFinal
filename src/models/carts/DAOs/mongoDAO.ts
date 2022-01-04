@@ -21,10 +21,9 @@ export class PersistenciaMongo implements CartBaseClass {
     this.carrito = server.model<CartObject>(dbCollection, cartSchema);
   }
 
-  async find(id: string): Promise<Boolean> {
-    const item: any = await this.carrito.findById(id);
-    if (item == 0) return false;
-    return true;
+  // Exportar el modelo para usarlo en tests
+  model(): any {
+    return this.carrito;
   }
 
   async getCart(userId: string): Promise<CartObject> {
@@ -43,12 +42,6 @@ export class PersistenciaMongo implements CartBaseClass {
     });
     await newCart.save();
     return newCart;
-  }
-
-  productExist(cart: CartObject, productId: string): boolean {
-    const index = cart.products.findIndex((aProduct) => aProduct._id == productId);
-    if (index < 0) return false;
-    return true;
   }
 
   async add2Cart(cartId: string, product: ProductObject): Promise<CartObject> {

@@ -64,10 +64,9 @@ export class PersistenciaMongo implements ProductBaseClass {
     });
   }
 
-  async find(id: string): Promise<Boolean> {
-    const item: any = await this.products.findById(id);
-    if (item == 0) return false;
-    return true;
+  // Exportar el modelo para usarlo en tests
+  model(): any {
+    return this.products;
   }
 
   async get(id?: string): Promise<ProductObject[]> {
@@ -122,7 +121,6 @@ export class PersistenciaMongo implements ProductBaseClass {
     if (options.stockMin) query.stock = { $gte: options.stockMin } as unknown as number;
     if (options.stockMin && options.stockMax)
       query.stock = { $gte: Number(options.stockMin), $lte: Number(options.stockMax) } as unknown as number;
-    // Logger.debug('Query: ', query);
     return this.products.find(query);
   }
 }
