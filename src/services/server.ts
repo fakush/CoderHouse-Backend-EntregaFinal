@@ -1,20 +1,17 @@
 import express, { Request, ErrorRequestHandler } from 'express';
 import * as http from 'http';
 import handlebars from 'express-handlebars';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import compression from 'compression';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import Config from '../config';
-import { mongoURL } from './mongodb';
 import { Logger } from '../utils/logger';
 import routersIndex from '../routes/index';
 import { hbsOptions } from '../utils/hbsOptions';
+import cors from 'cors';
 
 const app = express();
-const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
+// const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
 // paths
 const publicFolderPath = process.cwd() + '/public';
@@ -34,6 +31,9 @@ app.use(errorHandler);
 
 // Setea el uso de compresion.
 app.use(compression());
+
+// Setea el uso de cors.
+app.use(cors());
 
 // Express & Handlebars Setup
 app.use(express.static(publicFolderPath));

@@ -17,7 +17,7 @@ export const chatBot = async (userId: string, chabotMessage: any) => {
   if (message.toLowerCase().includes('stock')) {
     const products = productsAPI.getProducts();
     const stock = (await products).map((product: ProductObject) => {
-      product.name, product.stock;
+      return `${product.name} - ${product.stock}`;
     });
     newMessage.message = `Stock: ${JSON.stringify(stock)}`;
     return newMessage;
