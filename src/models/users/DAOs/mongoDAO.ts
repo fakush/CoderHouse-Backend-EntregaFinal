@@ -29,17 +29,8 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-// ToDo: Delete this after testing
-// UserSchema.methods.isValidPassword = async function (password) {
-//   const user = this;
-//   const compare = await bcrypt.compare(password, user.password);
-//   return compare;
-// };
-
 export class PersistenciaMongo implements UserBaseClass {
-  // private server: string;
   private users;
-  // private password: string;
 
   constructor() {
     const mongo = new MongoDB();
@@ -52,9 +43,7 @@ export class PersistenciaMongo implements UserBaseClass {
   }
 
   async query(query: any): Promise<UserObject> {
-    // Logger.debug('PersistenciaMongo.query()');
     const result = await this.users.find(query);
-    // Logger.debug(result);
     return result[0];
   }
 
