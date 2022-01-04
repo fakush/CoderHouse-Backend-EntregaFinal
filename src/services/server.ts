@@ -97,6 +97,14 @@ const options = {
       {
         url: `http://localhost:${Config.PORT}`,
         description: 'Development server'
+      },
+      {
+        url: `https://localhost:${Config.PORT}`,
+        description: 'Heroku server'
+      },
+      {
+        url: `https://fcreus-backend-proyect.herokuapp.com/`,
+        description: 'Heroku server 2'
       }
     ]
   },

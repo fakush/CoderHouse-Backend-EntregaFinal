@@ -1,4 +1,3 @@
-import winston from 'winston';
 import { createLogger, transports, LoggerOptions, format } from 'winston';
 const { timestamp, combine, errors, json, colorize, label, printf } = format;
 
@@ -39,8 +38,6 @@ const logConfiguration: LoggerOptions = {
     timestamp({ format: 'MMM-DD-YYYY HH:mm:ss' }),
     label({ label: 'Kwik-E-Mart-Backend' }),
     myFormat
-    // errors({ stack: true }),
-    // json()
   )
 };
 
